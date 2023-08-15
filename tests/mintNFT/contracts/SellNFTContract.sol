@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "./master.sol"; // Import the original NFT contract
+import "./NftMintContract.sol"; // Import the original NFT contract
 
 contract NFTMarketplace {
     TestNFT private nftContract;
@@ -33,14 +33,18 @@ contract NFTMarketplace {
         royaltyPercentage = _royaltyPercentage;
     }
 
-    function listNFT(uint256 _tokenId, uint256 _price) external {
+    function listNFT(uint256 _tokenId, uint256 _priceDecimal) external {
         require(nftContract.ownerOf(_tokenId) == msg.sender, "Only the owner can list this NFT");
+
+        // Convert the decimal price to wei (assuming you want to multiply by 10^18 for Ether to wei conversion)
+        uint256 priceInWei = _priceDecimal * 10**18;
+
         nftListings.push(NftListing({
             seller: msg.sender,
             tokenId: _tokenId,
-            price: _price
+            price: priceInWei
         }));
-        emit NftListed(msg.sender, _tokenId, _price);
+        emit NftListed(msg.sender, _tokenId, priceInWei);
     }
 
     function buyNFT(uint256 _listingIndex) external payable {
