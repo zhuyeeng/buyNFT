@@ -16,6 +16,7 @@ contract NFTMarketplace {
     }
 
     NftListing[] public nftListings;
+    event RoyaltyFeeCalculated(address indexed seller, uint256 indexed tokenId, uint256 royaltyFee);
 
     mapping(uint256 => address) public approvedSellers;
 
@@ -37,34 +38,75 @@ contract NFTMarketplace {
         require(nftContract.ownerOf(_tokenId) == msg.sender, "Only the owner can list this NFT");
 
         // Convert the decimal price to wei (assuming you want to multiply by 10^18 for Ether to wei conversion)
-        uint256 priceInWei = _priceDecimal * 10**18;
+        // uint256 priceInWei = _priceDecimal * 10**18;
 
         nftListings.push(NftListing({
             seller: msg.sender,
             tokenId: _tokenId,
-            price: priceInWei
+            price: _priceDecimal
         }));
-        emit NftListed(msg.sender, _tokenId, priceInWei);
+        emit NftListed(msg.sender, _tokenId, _priceDecimal);
     }
 
-    function buyNFT(uint256 _listingIndex) external payable {
-        NftListing memory listing = nftListings[_listingIndex];
-        require(msg.value >= listing.price, "Insufficient funds sent");
-        require(msg.sender != listing.seller, "You cannot buy your own NFT");
+    // function buyNFT(uint256 _listingIndex) external payable {
+    //     NftListing memory listing = nftListings[_listingIndex];
+    //     require(msg.value >= listing.price, "Insufficient funds sent");
+    //     require(msg.sender != listing.seller, "You cannot buy your own NFT");
 
-        // Transfer NFT ownership
-        nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
+    //     // Transfer NFT ownership
+    //     nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
 
-        // Calculate and send royalty fee
-        uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
-        payable(listing.seller).transfer(listing.price - royaltyFee);
+    //     // Calculate and send royalty fee
+    //     //  uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
+    //     // uint256 royaltyFee = listing.price * royaltyPercentage;
 
-        // Emit event
-        emit NftSold(listing.seller, msg.sender, listing.tokenId, listing.price);
+    //     // if( royaltyFee%100 == 0){
+    //     //     royaltyFee = royaltyFee/100;
+    //     // }
+    //     uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
 
-        // Remove the listing
-        delete nftListings[_listingIndex];
-    }
+    //     if (royaltyFee % 100 != 0) {
+    //         royaltyFee = royaltyFee + 1;
+    //     }else{
+    //         royaltyFee = (royaltyFee/100) + 1;
+    //     }
+
+    //     payable(listing.seller).transfer(listing.price - royaltyFee);
+
+    //     // Emit event
+    //     emit NftSold(listing.seller, msg.sender, listing.tokenId, listing.price);
+
+    //     // Remove the listing
+    //     delete nftListings[_listingIndex];
+    // }
+
+function buyNFT(uint256 _listingIndex) external payable {
+    NftListing memory listing = nftListings[_listingIndex];
+    require(msg.value >= listing.price, "Insufficient funds sent");
+    require(msg.sender != listing.seller, "You cannot buy your own NFT");
+
+    // Calculate and emit royalty fee
+    uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
+    emit RoyaltyFeeCalculated(listing.seller, listing.tokenId, royaltyFee);
+
+    require(listing.price >= royaltyFee, "Royalty fee exceeds listing price");
+    // Calculate the amount to send to the seller
+    uint256 amountToSeller = listing.price - royaltyFee;
+
+    // Transfer the amount to the seller
+    payable(listing.seller).transfer(amountToSeller);
+
+    // Transfer the NFT ownership
+    nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
+
+    // Emit event
+    emit NftSold(listing.seller, msg.sender, listing.tokenId, listing.price);
+
+    // Remove the listing
+    delete nftListings[_listingIndex];
+}
+
+
 
     function setRoyaltyPercentage(uint256 _newRoyaltyPercentage) external onlyOwner {
         require(_newRoyaltyPercentage <= 100, "Royalty percentage must be <= 100");

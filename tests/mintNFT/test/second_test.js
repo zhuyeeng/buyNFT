@@ -1,7 +1,6 @@
 const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers"); // use to redeploy the contract for faster testing to improve reliability.
 const { expect } = require("chai");
-
-        
+const { ethers, deployments, getNamedAccounts } = require("hardhat");
 
 describe("Buy Sell NFT Contract", function(){
     async function deployToken(){
@@ -24,22 +23,31 @@ describe("Buy Sell NFT Contract", function(){
         await contract.connect(seller).approve(secondContractAdd, 0);
     });
 
-    it("List NFT for sell", async function(){
-        const { seller, SellContract } = await deployToken();
-        const NFTprice = 0.00001;
-        const priceInWei = ethers.utils.parseUnits(NFTprice.toString());
-        await SellContract.connect(seller).listNFT(0, priceInWei);
-        const NFTDetail = await SellContract.nftListings(0);
-        console.log(NFTDetail);
-    });
+    it("Should allow a buyer to purchase an NFT", async function () {
+        const { secondContractAdd , seller, buyer, contract, SellContract } = await loadFixture(deployToken);
 
-    it("Buy NFT", async function(){
-        const { seller, buyer, SellContract } = await deployToken();
+        //Set the price of the NFT
+        const NFTprice = ethers.utils.parseEther("0.0001");
+        const NFTprice2 = ethers.utils.parseEther("0.01");
+
+        //Approve the NFT to the buy sell contract
+        await contract.connect(seller).approve(secondContractAdd, 0);
+        const total = await contract.totalSupply();
+
+        //Approve the seller to sell NFT
+        const approveSeller = await SellContract.approveSeller(0,seller.address);
+
+        //List the NFT for sale
+        await SellContract.connect(seller).listNFT(0, NFTprice);
+        
+        //Check NFT Details
+        const NFTDetails = await SellContract.nftListings(0);
+        console.log(NFTDetails);
+        const percentages = await SellContract.royaltyPercentage();
         const buyerBalance = await buyer.getBalance();
+        console.log(percentages)
         const availableBalance = ethers.utils.formatEther(buyerBalance);
         console.log("Buyer's Available Balance:", availableBalance);
-
-        await SellContract.connect(buyer).buyNFT(0, { value: buyerBalance });
-        // await SellContract.connect(buyer).buyNFT(0,{ value: ethers.utils.parseUnits("1000000000000000000")});
-    })
+        await SellContract.connect(buyer).buyNFT(0, { value: NFTprice2 });
+    });
 });

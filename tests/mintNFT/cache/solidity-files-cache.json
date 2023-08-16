@@ -1511,8 +1511,8 @@
       "artifacts": []
     },
     "C:\\Users\\User\\Documents\\buyNFT\\buyNFT\\tests\\mintNFT\\contracts\\SellNFTContract.sol": {
-      "lastModificationDate": 1692003503820,
-      "contentHash": "79fe7f19b855297f8b6ceff1f6f41483",
+      "lastModificationDate": 1692176548433,
+      "contentHash": "998744078f48337cfbb32ad2ba11f36f",
       "sourceName": "contracts/SellNFTContract.sol",
       "solcConfig": {
         "version": "0.8.9",
