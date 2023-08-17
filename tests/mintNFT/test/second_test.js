@@ -6,7 +6,7 @@ describe("Buy Sell NFT Contract", function(){
     async function deployToken(){
         const [owner, seller, buyer] = await ethers.getSigners();
         const uri = "https://ipfs.filebase.io/ipfs/QmR53eKpCo87CewvRkY6EwkssvMc7ppNZNVEJNnGe9CNbX"
-        const defaultRoyaltyFees = ethers.utils.parseUnits('5');
+        const defaultRoyaltyFees = 5;
         const MintNFT = await ethers.getContractFactory("TestNFT");
         const SellNFT= await ethers.getContractFactory("NFTMarketplace");
         const contract = await MintNFT.deploy();
@@ -25,6 +25,8 @@ describe("Buy Sell NFT Contract", function(){
 
     it("Should allow a buyer to purchase an NFT", async function () {
         const { secondContractAdd , seller, buyer, contract, SellContract } = await loadFixture(deployToken);
+        // const royaltyFee = await SellContract.royaltyFee();
+        const royaltyPercentage =  await SellContract.royaltyPercentage();
 
         //Set the price of the NFT
         const NFTprice = ethers.utils.parseEther("0.0001");
@@ -40,14 +42,21 @@ describe("Buy Sell NFT Contract", function(){
         //List the NFT for sale
         await SellContract.connect(seller).listNFT(0, NFTprice);
         
-        //Check NFT Details
+        // Check NFT Details
         const NFTDetails = await SellContract.nftListings(0);
-        console.log(NFTDetails);
-        const percentages = await SellContract.royaltyPercentage();
-        const buyerBalance = await buyer.getBalance();
-        console.log(percentages)
-        const availableBalance = ethers.utils.formatEther(buyerBalance);
-        console.log("Buyer's Available Balance:", availableBalance);
+        console.log("Check The NFT Details: ", NFTDetails);
+
+        //Checking the percentage and also check the buyer balance
+        // const percentages = await SellContract.royaltyPercentage();
+        // const buyerBalance = await buyer.getBalance();
+        // console.log(percentages)
+        // const availableBalance = ethers.utils.formatEther(buyerBalance);
+        // console.log("Buyer's Available Balance:", availableBalance);
+
         await SellContract.connect(buyer).buyNFT(0, { value: NFTprice2 });
+        const NFTDetailsAfter = await SellContract.nftListings(0);
+        console.log("NFT Details after sold: ", NFTDetailsAfter);
+
+        
     });
 });

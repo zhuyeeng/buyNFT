@@ -6,7 +6,7 @@ import "./NftMintContract.sol"; // Import the original NFT contract
 contract NFTMarketplace {
     TestNFT private nftContract;
     address public owner;
-    
+
     uint256 public royaltyPercentage; // Royalty fee percentage
 
     struct NftListing {
@@ -48,63 +48,28 @@ contract NFTMarketplace {
         emit NftListed(msg.sender, _tokenId, _priceDecimal);
     }
 
-    // function buyNFT(uint256 _listingIndex) external payable {
-    //     NftListing memory listing = nftListings[_listingIndex];
-    //     require(msg.value >= listing.price, "Insufficient funds sent");
-    //     require(msg.sender != listing.seller, "You cannot buy your own NFT");
+    function buyNFT(uint256 _listingIndex) external payable {
+        NftListing memory listing = nftListings[_listingIndex];
+        require(msg.value >= listing.price, "Insufficient funds sent");
+        require(msg.sender != listing.seller, "You cannot buy your own NFT");
 
-    //     // Transfer NFT ownership
-    //     nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
+        // Calculate and emit royalty fee
+        uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
+        // emit FeeCalculated(listing.seller, listing.tokenId, listing.price, royaltyFee);
 
-    //     // Calculate and send royalty fee
-    //     //  uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
-    //     // uint256 royaltyFee = listing.price * royaltyPercentage;
+        uint256 amountToSeller = listing.price - royaltyFee;
 
-    //     // if( royaltyFee%100 == 0){
-    //     //     royaltyFee = royaltyFee/100;
-    //     // }
-    //     uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
+        // Transfer amount to the seller and emit event
+        payable(listing.seller).transfer(amountToSeller);
+        // emit TransferToSeller(listing.seller, listing.tokenId, amountToSeller);
 
-    //     if (royaltyFee % 100 != 0) {
-    //         royaltyFee = royaltyFee + 1;
-    //     }else{
-    //         royaltyFee = (royaltyFee/100) + 1;
-    //     }
+        // Transfer NFT ownership and emit event
+        nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
+        // emit NFTTransferred(listing.seller, msg.sender, listing.tokenId);
 
-    //     payable(listing.seller).transfer(listing.price - royaltyFee);
-
-    //     // Emit event
-    //     emit NftSold(listing.seller, msg.sender, listing.tokenId, listing.price);
-
-    //     // Remove the listing
-    //     delete nftListings[_listingIndex];
-    // }
-
-function buyNFT(uint256 _listingIndex) external payable {
-    NftListing memory listing = nftListings[_listingIndex];
-    require(msg.value >= listing.price, "Insufficient funds sent");
-    require(msg.sender != listing.seller, "You cannot buy your own NFT");
-
-    // Calculate and emit royalty fee
-    uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
-    emit RoyaltyFeeCalculated(listing.seller, listing.tokenId, royaltyFee);
-
-    require(listing.price >= royaltyFee, "Royalty fee exceeds listing price");
-    // Calculate the amount to send to the seller
-    uint256 amountToSeller = listing.price - royaltyFee;
-
-    // Transfer the amount to the seller
-    payable(listing.seller).transfer(amountToSeller);
-
-    // Transfer the NFT ownership
-    nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);
-
-    // Emit event
-    emit NftSold(listing.seller, msg.sender, listing.tokenId, listing.price);
-
-    // Remove the listing
-    delete nftListings[_listingIndex];
-}
+        // Remove the listing
+        delete nftListings[_listingIndex];
+    }
 
 
 
