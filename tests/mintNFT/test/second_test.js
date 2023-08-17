@@ -43,20 +43,27 @@ describe("Buy Sell NFT Contract", function(){
         await SellContract.connect(seller).listNFT(0, NFTprice);
         
         // Check NFT Details
-        const NFTDetails = await SellContract.nftListings(0);
-        console.log("Check The NFT Details: ", NFTDetails);
+        // const NFTDetails = await SellContract.nftListings(0);
+        // console.log("Check The NFT Details: ", NFTDetails);
 
         //Checking the percentage and also check the buyer balance
         // const percentages = await SellContract.royaltyPercentage();
-        // const buyerBalance = await buyer.getBalance();
+        // const buyerBalanceBefore = await buyer.getBalance();
+        // const sellerBalanceBefore = await seller.getBalance();
         // console.log(percentages)
-        // const availableBalance = ethers.utils.formatEther(buyerBalance);
+        // const availableBalance = ethers.utils.formatEther(buyerBalanceBefore);
+        // const sellerBalanceBeforeBuy = ethers.utils.formatEther(sellerBalanceBefore);
+        // console.log("Seller balance: ", sellerBalanceBeforeBuy);
         // console.log("Buyer's Available Balance:", availableBalance);
 
         await SellContract.connect(buyer).buyNFT(0, { value: NFTprice2 });
-        const NFTDetailsAfter = await SellContract.nftListings(0);
-        console.log("NFT Details after sold: ", NFTDetailsAfter);
-
-        
+        // const NFTDetailsAfter = await SellContract.nftListings(0);
+        // const buyerBalance = await buyer.getBalance();
+        // const sellerBalanceAfter = await seller.getBalance();
+        // const availableBalanceAfter = ethers.utils.formatEther(buyerBalance);
+        // const sellerBalanceAfterBuy = ethers.utils.formatEther(sellerBalanceAfter);
+        // console.log("Seller Balance After: ", sellerBalanceAfterBuy);
+        // console.log("Buyer current balance: ", availableBalanceAfter);
+        // console.log("NFT Details after sold: ", NFTDetailsAfter);
     });
 });
