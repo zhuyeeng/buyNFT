@@ -53,10 +53,14 @@ contract NFTMarketplace {
         // Calculate and emit royalty fee
         uint256 royaltyFee = (listing.price * royaltyPercentage) / 100;
 
-        uint256 amountToSeller = listing.price - royaltyFee;
+        // uint256 amountToSeller = listing.price - royaltyFee;
 
-        // Transfer amount to the seller and emit event
-        payable(listing.seller).transfer(amountToSeller);
+
+        // Transfer amount to the seller
+        payable(listing.seller).transfer(listing.price);
+
+        //Transfer royalty fee to original owner
+        
 
         // Transfer NFT ownership and emit event
         nftContract.safeTransferFrom(listing.seller, msg.sender, listing.tokenId);

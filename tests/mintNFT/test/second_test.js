@@ -35,7 +35,7 @@ describe("Buy Sell NFT Contract", function(){
         const total = await contract.totalSupply();
 
         //Approve the seller to sell NFT
-        const approveSeller = await SellContract.approveSeller(0,seller.address);
+        await SellContract.approveSeller(0,seller.address);
 
         //List the NFT for sale
         await SellContract.connect(seller).listNFT(0, NFTprice);
