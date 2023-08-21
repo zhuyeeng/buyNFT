@@ -12,8 +12,7 @@ import Image from "next/image";
 
 const Explore_collection = () => {
   const dispatch = useDispatch();
-  const [collectionFilteredData, setCollectionFilteredData] = useState(
-    fetchExploreCollectionNFTData  );
+  const [collectionFilteredData, setCollectionFilteredData] = useState([]);
   const [filterVal, setFilterVal] = useState(0);
 
   const handleItemFilter = (text) => {
@@ -27,8 +26,18 @@ const Explore_collection = () => {
   };
 
   useEffect(() => {
-    dispatch(collectCollectionData(collectionFilteredData.slice(0, 8)));
-  }, [dispatch, collectionFilteredData]);
+    const fetchDataAndDispatch = async () => {
+      try {
+        const nftData = await fetchExploreCollectionNFTData();
+        setCollectionFilteredData(nftData);
+        dispatch(collectCollectionData(nftData.slice(0, 8)));
+      } catch (error) {
+        console.error("Error fetching and dispatching data:", error.message);
+      }
+    };
+
+    fetchDataAndDispatch();
+  }, [dispatch]);
 
   return (
     <>

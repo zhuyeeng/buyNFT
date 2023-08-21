@@ -249,4 +249,4 @@ const Feature_collections_data = [
 	},
 ];
 
-export default { Feature_collections_data, fetchExploreCollectionNFTData };
+export { Feature_collections_data, fetchExploreCollectionNFTData };
