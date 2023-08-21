@@ -59,6 +59,8 @@ export default function Header01() {
       setLocalBalance(storedBalance);
     }
 
+    console.log(localAddress);
+
     window.addEventListener("resize", () => {
       if (window.innerWidth >= 1024) {
         setToggle(false);
@@ -369,7 +371,7 @@ export default function Header01() {
               height={28}
               width={130}
               alt="Xhibiter | NFT Marketplace"
-              className="max-h-7 h-auto "
+              className=" h-auto "
             />
           </div>
           <div className="hidden dark:block">
@@ -695,7 +697,8 @@ export default function Header01() {
                   </div>
                 </div>
                 <Link
-                  href="/user/avatar_6"
+                  href="/user/"
+                  // to={`/user/${localAddress}`}
                   className="dark:hover:bg-jacarta-600 hover:text-accent focus:text-accent hover:bg-jacarta-50 flex items-center space-x-2 rounded-xl px-5 py-2 transition-colors"
                 >
 
@@ -817,7 +820,7 @@ export default function Header01() {
             height={28}
             width={130}
             alt="Xhibiter | NFT Marketplace"
-            className="max-h-7 h-auto "
+            className="h-auto "
           />
         </div>
 

@@ -17,7 +17,7 @@ const footer = () => {
                   width={130}
                   height={28}
                   src="/images/logo.png"
-                  className="max-h-7 dark:hidden"
+                  className=" dark:hidden"
                   alt="Xhibiter | NFT Marketplace"
                 />
               </Link>
@@ -27,7 +27,7 @@ const footer = () => {
                   width={130}
                   height={28}
                   src="/images/logo_white.png"
-                  className="hidden max-h-7 dark:block mb-6"
+                  className="hidden dark:block mb-6"
                   alt="Xhibiter | NFT Marketplace"
                 />
               </Link>
