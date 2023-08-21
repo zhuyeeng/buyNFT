@@ -5,10 +5,10 @@ import Meta from "../../components/Meta";
 import Image from "next/image";
 import { useWallet } from '../../context/walletContext';
 import useNumberGame from '../../components/numbergame/numberGame';
-
-
+import sendTransaction from '../../utils/sendTransaction';
+import { ethers } from 'ethers';
 const NumberGame = () => {
-  const { account, balance } = useWallet();
+  const { account, balance ,updateBalance } = useWallet();
 
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
   const [entryBet, setEntryBet] = useState("");
@@ -28,13 +28,14 @@ const NumberGame = () => {
   }, [account, balance]);
 
   const handleJoinGame = async () => {
-
     if (!joinGame) {
       console.error("joinGame function is not initialized yet.");
       return;
     }
     try {
-      await joinGame(entryBet);
+      const transactionPromise = joinGame(entryBet);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await sendTransaction(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
@@ -45,7 +46,9 @@ const NumberGame = () => {
 
   const handleGuess = async () => {
     try {
-      await guess(guessBet, playerGuess);
+      const transactionPromise = guess(guessBet, playerGuess);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await sendTransaction(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
@@ -55,15 +58,15 @@ const NumberGame = () => {
 
   const handleWithdraw = async () => {
     try {
-      await withdraw();
+      const transactionPromise = withdraw();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await sendTransaction(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
       // Display this error to the user
     }
   };
-
-
 
   return (
     <>

@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateTrendingCategoryItemData } from "../../redux/counterSlice";
 
 const Trending_categories_items = () => {
-  const [itemData, setItemData] = useState(fetchCollectionNFTData || []);
+  const [itemData, setItemData] = useState([]);
   const dispatch = useDispatch();
   const { trendingCategorySorText } = useSelector((state) => state.counter);
   const [filterVal, setFilterVal] = useState(0);
@@ -43,13 +43,14 @@ const Trending_categories_items = () => {
   ];
 
   useEffect(() => {
-    if (Array.isArray(itemData)) {
-      dispatch(updateTrendingCategoryItemData(itemData.slice(0, 8)));
-    }
-    else {
-      console.error('itemData is not an array:', itemData);
-  }
-  }, [itemData, dispatch]);
+    fetchCollectionNFTData()
+      .then(data => {
+        setItemData(data);
+      })
+      .catch(error => {
+        console.error("Error fetching the NFT data:", error);
+      });
+  }, []);
 
   return (
     <>
