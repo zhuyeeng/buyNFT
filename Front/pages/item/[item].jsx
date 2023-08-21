@@ -60,9 +60,11 @@ const Item = () => {
                 ownerImage,
                 creatorname,
                 ownerName,
+                royalty,
                 price,
                 auction_timer,
               } = item;
+              console.log(modifiedNFTData);
 
               return (
                 <div className="md:flex md:flex-wrap" key={id}>
@@ -210,7 +212,7 @@ const Item = () => {
                         </figure>
                         <div className="flex flex-col justify-center">
                           <span className="text-jacarta-400 block text-sm dark:text-white">
-                            Creator <strong>10% royalties</strong>
+                            Creator <strong>{royalty}% Royalty</strong>
                           </span>
                           <Link
                             href="/user/avatar_6"
@@ -258,7 +260,7 @@ const Item = () => {
                             className="text-accent block"
                           >
                             <span className="text-sm font-bold">
-                              {ownerName}
+                              {`${ownerName.substring(0, 3)}...${ownerName.slice(-4)}`}
                             </span>
                           </Link>
                         </div>

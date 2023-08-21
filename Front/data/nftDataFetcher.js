@@ -1,4 +1,4 @@
-import {ethers,providers} from 'ethers';
+import { ethers, providers } from 'ethers';
 import axios from 'axios';
 import { nftContractAddress, providerURL } from '../config/setting';
 import contractAbi from './abi/nftMintAbi.json';
@@ -16,11 +16,18 @@ async function getAllNFTData() {
     promises.push(getNFTData(nftContract, index));
   }
 
+
   const results = await Promise.all(promises);
 
   results.forEach((result) => {
-    nftData.push({ owner: result.tokenOwner, nftUri: result.tokenURI });
+    nftData.push({ 
+      owner: result.tokenOwner, 
+      nftUri: result.tokenURI,
+      royaltyPercentage: result.royaltyPercentage,
+    });
   });
+
+  // console.log(nftData);
 
   return nftData;
 }
@@ -28,8 +35,9 @@ async function getAllNFTData() {
 async function getNFTData(nftContract, index) {
   const tokenURI = await nftContract.tokenURI(index);
   const tokenOwner = await nftContract.ownerOf(index);
+  const royaltyPercentage = await nftContract.royaltyPercentage();
 
-  return { tokenOwner, tokenURI };
+  return { tokenOwner, tokenURI, royaltyPercentage };
 }
 
 async function getNFTDataFromIPFS() {
@@ -37,10 +45,16 @@ async function getNFTDataFromIPFS() {
 
   for (const data of nftDatas) {
     const uriData = data.nftUri.replace('ipfs://', 'https://ipfs.io/ipfs/');
+    const ownerAdd = data.owner;
+    const royalty = data.royaltyPercentage.toNumber();
 
     try {
       const response = await axios.get(uriData);
       data.uriData = response.data;
+      data.ownerName = ownerAdd;
+      data.percentage = royalty;
+      // console.log(royalty);
+      // console.log(ownerAdd);
     } catch (error) {
       console.error(`Error fetching data for ${data.nftUri}:`, error.message);
     }
@@ -56,8 +70,9 @@ function mapDataToCarouselFormat(nftDataArray) {
       description: item.uriData.description,
       image: item.uriData.image,
       name: item.uriData.name,
-      ownerName: item.uriData.ownerAddress,
-      title: 'something',
+      ownerName: item.ownerName,
+      royalty: item.percentage,
+      title: 'Lorem Ipsum',
       price: 1.55,
       like: 160,
       creatorImage: item.uriData.image,
@@ -98,6 +113,28 @@ function mapDataToCollectionFormat(nftDataArray) {
   });
 }
 
+function mapToFeatureCollectionsFormat(nftDataArray) {
+  return nftDataArray.map((item, index) => {
+    return 	{
+      id: index,
+      bigImage: item.uriData.image,
+      subImage1: item.uriData.image,
+      subImage2: item.uriData.image,
+      subImage3: item.uriData.image,
+      userImage: item.uriData.image,
+      userName: `user #${index}`,
+      itemsCount: `${100+index}`,
+      title: item.uriData.name,
+      category: 'art',
+      category: 'Collectibles',
+      category: 'photography',
+      top: true,
+      trending: true,
+      recent: true,
+    }
+  });
+}
+
 async function fetchCarouselNFTData() {
   try {
     const nftDataWithUriData = await getNFTDataFromIPFS();
@@ -107,8 +144,7 @@ async function fetchCarouselNFTData() {
     console.error('Error fetching NFT data:', error.message);
   }
 }
-
-async function fetchCollectionNFTData () {
+async function fetchCollectionNFTData() {
   try {
     const nftDataWithUriData = await getNFTDataFromIPFS();
     const modifiedNftDatas = mapDataToCollectionFormat(nftDataWithUriData);
@@ -117,5 +153,17 @@ async function fetchCollectionNFTData () {
     console.error('Error fetching NFT data:', error.message);
   }
 }
+
+async function fetchExploreCollectionNFTData() {
+  try {
+    const nftDataWithUriData = await getNFTDataFromIPFS();
+    const modifiedNftDatas = mapToFeatureCollectionsFormat(nftDataWithUriData);
+    return modifiedNftDatas;
+  } catch (error) {
+    console.error('Error fetching NFT data:', error.message);
+  }
+}
 // fetchAndProcessNFTData();
-export { fetchCarouselNFTData, fetchCollectionNFTData };
+export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData};
+// getAllNFTData();
+getNFTDataFromIPFS();
