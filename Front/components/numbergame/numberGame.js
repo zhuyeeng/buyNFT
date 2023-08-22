@@ -4,6 +4,7 @@ import numberGameAbi from '../../data/abi/numberGameAbi.json';
 import { numberGameAddress } from '../../config/setting';
 import { useWallet } from '../../context/walletContext';
 
+
 export default function useNumberGame() {
     const { account ,balance} = useWallet();
     const [contract, setContract] = useState(null);
@@ -18,38 +19,22 @@ export default function useNumberGame() {
         }
     }, [account]);
 
-    const joinGame = async (entryBet) => {
+    const joinGame = (entryBet) => {
         if (!contract) {
             console.error("Contract is not initialized");
-            return;
+            return null;
         }
-        try {
-            const valueToSend = ethers.utils.parseEther(entryBet); 
-            const tx = await contract.joinGame({ value: valueToSend, gasLimit: 100000 });
-            await tx.wait();
-        } catch(error) {
-            alert(error);
-        }
+        const valueToSend = ethers.utils.parseEther(entryBet); 
+        return contract.joinGame({ value: valueToSend, gasLimit: 100000 });
     };
 
-    async function guess(betValue, playerGuess){
-        try{
-            const valueToSend = ethers.utils.parseEther(betValue); 
-            const guessing = await contract
-            .makeGuess(playerGuess, { value: valueToSend, gasLimit: 120000})
-            await guessing.wait();
-        }catch(error){
-            alert(error);
-            }
-        
-    } 
-    
-    async function withdraw(){
-        try{
-            await contract.withdraw({gasLimit: 100000});
-        } catch(error){
-            alert(error);
-        }
-    }
+    const guess = (betValue, playerGuess) => {
+        const valueToSend = ethers.utils.parseEther(betValue); 
+        return contract.makeGuess(playerGuess, { value: valueToSend, gasLimit: 120000});
+    };
+
+    const withdraw = () => {
+        return contract.withdraw({gasLimit: 100000});
+    };
     return { joinGame, guess, withdraw };
 }
