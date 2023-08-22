@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-const sendTransaction = async (transactionPromise, provider, account, updateBalance) => {
+const txUpdateDisplay = async (transactionPromise, provider, account, updateBalance) => {
     let receipt = null;
 
     try {
@@ -28,4 +28,4 @@ const sendTransaction = async (transactionPromise, provider, account, updateBala
 };
 
 
-export default sendTransaction;
+export default txUpdateDisplay;

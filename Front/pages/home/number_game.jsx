@@ -5,8 +5,10 @@ import Meta from "../../components/Meta";
 import Image from "next/image";
 import { useWallet } from '../../context/walletContext';
 import useNumberGame from '../../components/numbergame/numberGame';
-import sendTransaction from '../../utils/sendTransaction';
+import txUpdateDisplay from '../../utils/txUpdateDisplay';
 import { ethers } from 'ethers';
+
+
 const NumberGame = () => {
   const { account, balance ,updateBalance } = useWallet();
 
@@ -35,7 +37,7 @@ const NumberGame = () => {
     try {
       const transactionPromise = joinGame(entryBet);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await sendTransaction(transactionPromise, provider, account, updateBalance);
+      await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
@@ -48,7 +50,7 @@ const NumberGame = () => {
     try {
       const transactionPromise = guess(guessBet, playerGuess);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await sendTransaction(transactionPromise, provider, account, updateBalance);
+      await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
@@ -60,7 +62,7 @@ const NumberGame = () => {
     try {
       const transactionPromise = withdraw();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await sendTransaction(transactionPromise, provider, account, updateBalance);
+      await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
       // Maybe provide some success feedback here
     } catch (error) {
       console.error(error);
