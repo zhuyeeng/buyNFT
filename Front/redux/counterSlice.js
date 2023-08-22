@@ -45,8 +45,9 @@ export const counterSlice = createSlice({
     walletModalhide: (state) => {
       state.walletModal = false;
     },
-    bidsModalShow: (state) => {
+    bidsModalShow: (state, action) => {
       state.bidsModal = true;
+      state.pid = action.payload;
     },
     bidsModalHide: (state) => {
       state.bidsModal = false;

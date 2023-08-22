@@ -30,6 +30,10 @@ const Item = () => {
       .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
   }, []);
 
+  const handleBuyButtonClick = () => {
+    dispatch(bidsModalShow(pid));
+  }
+
   return (
     <>
       <Meta title={`${pid} || Xhibiter | NFT Marketplace Next.js Template`} />
@@ -327,10 +331,10 @@ const Item = () => {
 
                       <Link href="#">
                         <button
-                          className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                          onClick={() => dispatch(bidsModalShow())}
+                          className = "bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                          onClick = {handleBuyButtonClick}
                         >
-                          Place Bid
+                          Buy
                         </button>
                       </Link>
                     </div>

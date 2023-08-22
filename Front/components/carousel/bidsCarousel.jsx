@@ -114,7 +114,7 @@ const BidsCarousel = () => {
                       className="text-accent font-display text-sm font-semibold"
                       onClick={() => dispatch(bidsModalShow())}
                     >
-                      Place bid
+                      Buy
                     </button>
 
                     {/* <Likes
