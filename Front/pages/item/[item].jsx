@@ -13,15 +13,23 @@ import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
 import { bidsModalShow } from "../../redux/counterSlice";
 import Image from "next/image";
+import { useWallet } from "../../context/walletContext";
+import useNftBuySell from '../../components/nftBuySell/nftBuySell';
+
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const Item = () => {
+  const { account, balance } = useWallet();
+  const [isWalletInitialized, setIsWalletInitialized] = useState(false);
+  const [payAmount, setPayAmount] = useState("");
   const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
   const pid = parseInt(router.query.item);
 
   const [imageModal, setImageModal] = useState(false);
+  const nftBuySellHooks = useNftBuySell();
+  const {buyFunction} = isWalletInitialized ? nftBuySellHooks : {};
 
   useEffect(() => {
     // Call the asynchronous function and set the state with the result
@@ -30,8 +38,8 @@ const Item = () => {
       .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
   }, []);
 
-  const handleBuyButtonClick = () => {
-    dispatch(bidsModalShow(pid));
+  const buyAction = async () => {
+    
   }
 
   return (
@@ -155,7 +163,7 @@ const Item = () => {
                         /> */}
 
                         {/* <!-- Actions --> */}
-                        <Auctions_dropdown classes="dark:border-jacarta-600 dark:hover:bg-jacarta-600 border-jacarta-100 dropdown hover:bg-jacarta-100 dark:bg-jacarta-700 rounded-xl border bg-white" />
+                        {/* <Auctions_dropdown classes="dark:border-jacarta-600 dark:hover:bg-jacarta-600 border-jacarta-100 dropdown hover:bg-jacarta-100 dark:bg-jacarta-700 rounded-xl border bg-white" /> */}
                       </div>
                     </div>
 
@@ -163,7 +171,7 @@ const Item = () => {
                       {title}
                     </h1>
 
-                    <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
+                    {/* <div className="mb-8 flex items-center space-x-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <Tippy content={<span>ETH</span>}>
                           <span className="-ml-1">
@@ -182,7 +190,7 @@ const Item = () => {
                       <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
                         1/1 available
                       </span>
-                    </div>
+                    </div> */}
 
                     <p className="dark:text-jacarta-300 mb-10">{text}</p>
 
