@@ -18,7 +18,7 @@ import useNftBuySell from '../../components/nftBuySell/nftBuySell';
 
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
-const item = () => {
+const buySell = () => {
   const { account, balance } = useWallet();
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
   const [payAmount, setPayAmount] = useState("");
@@ -39,12 +39,7 @@ const item = () => {
   }, []);
 
   const buyAction = async () => {
-    try{
-      await buyFunction(payAmount, pid);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-    }catch(error){
-      console.error(error);
-    }
+    
   }
 
   return (
@@ -345,7 +340,7 @@ const item = () => {
                       <Link href="#">
                         <button
                           className = "bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                          onClick={() => dispatch(bidsModalShow())}
+                          onClick = {handleBuyButtonClick}
                         >
                           Buy
                         </button>
@@ -366,4 +361,4 @@ const item = () => {
   );
 };
 
-export default item;
+export default buySell;

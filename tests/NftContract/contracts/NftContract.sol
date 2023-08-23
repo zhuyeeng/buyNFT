@@ -112,7 +112,6 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
 
         // Remove the NFT listing
         delete nftListings[tokenId];
-
     }
 
     function sellNFT(uint256 tokenId, uint256 price) external {
