@@ -6,6 +6,7 @@ import { nftContractAddress, providerURL } from '../../config/setting';
 import { ethers, providers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
 import useNftBuySell from '../../components/nftBuySell/nftBuySell';
+import txUpdateDisplay from '../../utils/txUpdateDisplay';
 
 const BidsModal = () => {
   const { account, balance } = useWallet();
@@ -14,11 +15,11 @@ const BidsModal = () => {
   const [payAmount, setPayAmount] = useState("");
   const { bidsModal } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
-  const [ETHAmount, setETHAmount] = useState(0.05);
+
   const pid = useSelector(state => state.counter.pid);
 
   const nftBuySellHooks = useNftBuySell();
-  // const { buy } = isWalletInitialized ? nftBuySellHooks : {};
+  const { buy } = isWalletInitialized ? nftBuySellHooks : {};
   
   useEffect(() => {
     if (account && balance) {
@@ -27,17 +28,20 @@ const BidsModal = () => {
     }
   }, [account, balance]);
 
-  const handleEThAmount = (e) => {
-    e.preventDefault();
-    setETHAmount(e.target.value);
-    setPayAmount(e.target.value);
-  };
-
   const buyAction = async () => {
+    // console.log(typeof(payAmount));
+    if (!buy) {
+      console.error("buy function is not initialized yet.");
+      return;
+    }
     try{
       if(isWalletInitialized){
-        await nftBuySellHooks.buyFunction(pid, payAmount);
+        const parsedPayAmount = ethers.utils.parseUnits(payAmount, 18);
+        const transactionPromise = buy(pid,parsedPayAmount);
         const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await nftBuySellHooks.buy(pid, payAmount);
+        await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
       }else{
         console.error('wallet not initialized.');
       }
@@ -45,25 +49,6 @@ const BidsModal = () => {
       console.error(error);
     }
   }
-
-  // const handleBuy = async () => {
-  //   try{
-  //     const provider = new providers.Web3Provider(window.ethereum);
-  //     await provider.send("eth_requestAcconts",[]);
-      
-  //     const signer = provider.getSigner();
-  //     const nftContract = new ethers.Contract(nftContractAddress, contractAbi, signer);
-
-  //     const nftPrice = ethers.utils.parseEther(ETHAmount.toString());
-  //     const transaction = await nftContract.buyNFT(pid, { value: nftPrice });
-
-  //     await transaction.wait();
-
-  //     console.log("Buy Successfully");
-  //   }catch(error){
-  //     console.log("Error buying NFT: ", error);
-  //   }
-  // };
 
   return (
     <div>
@@ -116,8 +101,8 @@ const BidsModal = () => {
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
                   placeholder="Amount"
-                  value={ETHAmount}
-                  onChange={(e) => handleEThAmount(e)}
+                  value={payAmount}
+                  onChange={(e) => setPayAmount(e.target.value)}
                 />
 
                 <div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">

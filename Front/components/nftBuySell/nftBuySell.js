@@ -14,9 +14,29 @@ export default function useNftBuySell() {
             const signer = provider.getSigner();
             const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, signer);
             setContract(nftContract);
+            // console.log('success');
         } else {
             console.error('MetaMask extension not found or account not connected.');
-            // console.log('error');
         }
     }, [account]);
+
+    const buy = (tokenId, payAmount) => {
+        console.log(payAmount);
+        if(!contract){
+            console.error('Contract not initialized');
+            return;
+        }
+        if (isNaN(payAmount) || parseFloat(payAmount) <= 0) {
+            console.error('Invalid payAmount:', payAmount);
+            return;
+        }
+
+        try{
+            const totalAmount = ethers.utils.parseEther(payAmount);
+            return contract.buyNFT(tokenId, { value: totalAmount, gasLimit: 120000000});
+        }catch(error){
+            console.error('Error while buying NFT: ', error);
+        }
+    };
+    return { buy };
 }
