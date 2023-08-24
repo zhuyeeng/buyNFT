@@ -21,7 +21,7 @@ export default function useNftBuySell() {
     }, [account]);
 
     const buy = (tokenId, payAmount) => {
-        console.log(payAmount);
+        // console.log(payAmount);
         if(!contract){
             console.error('Contract not initialized');
             return;
@@ -33,7 +33,7 @@ export default function useNftBuySell() {
 
         try{
             const totalAmount = ethers.utils.parseEther(payAmount);
-            return contract.buyNFT(tokenId, { value: totalAmount, gasLimit: 120000000});
+            return contract.buyNFT(tokenId, { value: totalAmount, gasLimit: 1200000});
         }catch(error){
             console.error('Error while buying NFT: ', error);
         }

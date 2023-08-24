@@ -17,6 +17,7 @@ const BidsModal = () => {
   const dispatch = useDispatch();
 
   const pid = useSelector(state => state.counter.pid);
+  console.log('pid:',pid);
 
   const nftBuySellHooks = useNftBuySell();
   const { buy } = isWalletInitialized ? nftBuySellHooks : {};
@@ -34,18 +35,25 @@ const BidsModal = () => {
       console.error("buy function is not initialized yet.");
       return;
     }
+    if (!payAmount) {
+      console.error("Parsed payAmount is undefined.");
+      return;
+    }
+    
     try{
       if(isWalletInitialized){
-        const parsedPayAmount = ethers.utils.parseUnits(payAmount, 18);
-        const transactionPromise = buy(pid,parsedPayAmount);
+        const parsedPayAmount = ethers.utils.parseUnits(payAmount);
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await nftBuySellHooks.buy(pid, payAmount);
-        await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
+        console.log(typeof(payAmount));
+        console.log('success');
+        // await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
         // const provider = new ethers.providers.Web3Provider(window.ethereum);
       }else{
         console.error('wallet not initialized.');
       }
     }catch(error){
+      // console.log(typeof(payAmount));
       console.error(error);
     }
   }

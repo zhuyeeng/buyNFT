@@ -13,23 +13,16 @@ import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
 import { bidsModalShow } from "../../redux/counterSlice";
 import Image from "next/image";
-import { useWallet } from "../../context/walletContext";
-import useNftBuySell from '../../components/nftBuySell/nftBuySell';
 
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const item = () => {
-  const { account, balance } = useWallet();
-  const [isWalletInitialized, setIsWalletInitialized] = useState(false);
-  const [payAmount, setPayAmount] = useState("");
   const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
   const pid = parseInt(router.query.item);
 
   const [imageModal, setImageModal] = useState(false);
-  const nftBuySellHooks = useNftBuySell();
-  const {buyFunction} = isWalletInitialized ? nftBuySellHooks : {};
 
   useEffect(() => {
     // Call the asynchronous function and set the state with the result
@@ -37,15 +30,6 @@ const item = () => {
       .then((data) => setModifiedNFTData(data))
       .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
   }, []);
-
-  const buyAction = async () => {
-    try{
-      await buyFunction(payAmount, pid);
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-    }catch(error){
-      console.error(error);
-    }
-  }
 
   return (
     <>
@@ -345,7 +329,7 @@ const item = () => {
                       <Link href="#">
                         <button
                           className = "bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                          onClick={() => dispatch(bidsModalShow())}
+                          onClick={() => dispatch(bidsModalShow(pid))}
                         >
                           Buy
                         </button>
