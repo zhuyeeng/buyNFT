@@ -273,7 +273,7 @@ const item = () => {
                       <div className="mb-8 sm:flex sm:flex-wrap">
                         {/* <!-- Highest bid --> */}
                         <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
-                          <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
+                          {/* <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
                             <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
                               Highest bid by{" "}
                             </span>
@@ -283,7 +283,7 @@ const item = () => {
                             >
                               0x695d2ef170ce69e794707eeef9497af2de25df82
                             </Link>
-                          </div>
+                          </div> */}
                           <div className="mt-3 flex">
                             <figure className="mr-4 shrink-0">
                               <Link href="#" className="relative block">
@@ -310,9 +310,9 @@ const item = () => {
                                   {price} ETH
                                 </span>
                               </div>
-                              <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
+                              {/* <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
                                 ~10,864.10
-                              </span>
+                              </span> */}
                             </div>
                           </div>
                         </div>

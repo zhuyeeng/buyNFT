@@ -9,11 +9,15 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
+const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const User = () => {
   const router = useRouter();
   const pid = router.query.user;
+  console.log(pid);
+  console.log(typeof(pid));
 
+  const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
 

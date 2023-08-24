@@ -6,7 +6,6 @@ require('dotenv').config();
 
 const provider = new providers.JsonRpcProvider(providerURL);
 
-
 async function getAllNFTData() {
   const nftData = [];
   const nftContract = new ethers.Contract(nftContractAddress, contractAbi, provider);
@@ -15,7 +14,7 @@ async function getAllNFTData() {
   for (let index = 0; index < totalIndex; index++) {
     promises.push(getNFTData(nftContract, index));
   }
-
+  
 
   const results = await Promise.all(promises);
 
@@ -26,18 +25,29 @@ async function getAllNFTData() {
       royaltyPercentage: result.royaltyPercentage,
     });
   });
-
-  // console.log(nftData);
-
   return nftData;
 }
 
 async function getNFTData(nftContract, index) {
   const tokenURI = await nftContract.tokenURI(index);
   const tokenOwner = await nftContract.ownerOf(index);
+  const listing = await nftContract.nftListings(index);
   const royaltyPercentage = await nftContract.royaltyPercentage();
 
-  return { tokenOwner, tokenURI, royaltyPercentage };
+  const isForSale = listing.isForSale;
+  const nftData = {
+    tokenOwner,
+    tokenURI,
+    royaltyPercentage,
+    isForSale,
+  };
+
+  if (isForSale) {
+    nftData.price = listing.price;
+    nftData.seller = listing.seller;
+  }
+
+  return nftData;
 }
 
 async function getNFTDataFromIPFS() {
@@ -53,8 +63,6 @@ async function getNFTDataFromIPFS() {
       data.uriData = response.data;
       data.ownerName = ownerAdd;
       data.percentage = royalty;
-      // console.log(royalty);
-      // console.log(ownerAdd);
     } catch (error) {
       console.error(`Error fetching data for ${data.nftUri}:`, error.message);
     }
@@ -62,6 +70,10 @@ async function getNFTDataFromIPFS() {
 
   return nftDatas;
 }
+
+// async function getPrice(){
+//   let nftPrice = 
+// }
 
 function mapDataToCarouselFormat(nftDataArray) {
   return nftDataArray.map((item, index) => {
@@ -73,7 +85,6 @@ function mapDataToCarouselFormat(nftDataArray) {
       ownerName: item.ownerName,
       royalty: item.percentage,
       title: 'Lorem Ipsum',
-      price: 1.55,
       like: 160,
       creatorImage: item.uriData.image,
       ownerImage: item.uriData.image,
@@ -163,7 +174,6 @@ async function fetchExploreCollectionNFTData() {
     console.error('Error fetching NFT data:', error.message);
   }
 }
-// fetchAndProcessNFTData();
+
 export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData};
 // getAllNFTData();
-getNFTDataFromIPFS();
