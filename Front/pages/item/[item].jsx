@@ -310,20 +310,16 @@ const item = () => {
                                   {price} ETH
                                 </span>
                               </div>
-                              {/* <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                                ~10,864.10
-                              </span> */}
                             </div>
                           </div>
                         </div>
-
-                        {/* <!-- Countdown --> */}
-                        <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 sm:border-l sm:pl-4 lg:pl-8">
+                      </div>
+                      {/* <!-- Countdown --> */}
+                      <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 sm:border-l sm:pl-4 lg:pl-8">
                           <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
-                            Auction ends in
+                            List Timer
                           </span>
                           <Items_Countdown_timer time={+auction_timer} />
-                        </div>
                       </div>
 
                       <Link href="#">

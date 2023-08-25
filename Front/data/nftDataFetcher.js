@@ -23,6 +23,7 @@ async function getAllNFTData() {
       owner: result.tokenOwner, 
       nftUri: result.tokenURI,
       royaltyPercentage: result.royaltyPercentage,
+      nftPrice: result.price,
     });
   });
   return nftData;
@@ -34,18 +35,23 @@ async function getNFTData(nftContract, index) {
   const listing = await nftContract.nftListings(index);
   const royaltyPercentage = await nftContract.royaltyPercentage();
 
-  const isForSale = listing.isForSale;
+  const isForSale = listing[2]; // Check if the NFT is for sale
+
+  let price = null;
+  if (isForSale) {
+    price = ethers.utils.formatEther(listing[1]); // Get the price if the NFT is for sale
+    // price = price * 10^^18;
+  }
+
   const nftData = {
     tokenOwner,
     tokenURI,
     royaltyPercentage,
     isForSale,
+    price,
   };
 
-  if (isForSale) {
-    nftData.price = listing.price;
-    nftData.seller = listing.seller;
-  }
+  console.log(nftData);
 
   return nftData;
 }
@@ -71,10 +77,6 @@ async function getNFTDataFromIPFS() {
   return nftDatas;
 }
 
-// async function getPrice(){
-//   let nftPrice = 
-// }
-
 function mapDataToCarouselFormat(nftDataArray) {
   return nftDataArray.map((item, index) => {
     return {
@@ -84,6 +86,7 @@ function mapDataToCarouselFormat(nftDataArray) {
       name: item.uriData.name,
       ownerName: item.ownerName,
       royalty: item.percentage,
+      price: item.nftPrice,
       title: 'Lorem Ipsum',
       like: 160,
       creatorImage: item.uriData.image,
