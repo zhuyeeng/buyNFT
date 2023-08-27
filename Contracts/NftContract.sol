@@ -33,6 +33,7 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
         address seller;
         uint256 price;
         bool isForSale;
+        uint256 listingTimestamp;
     }
 
     constructor(uint256 maxSupply) ERC721("NftContract", "NFTC") {
@@ -123,6 +124,9 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
             price: price,
             isForSale: true
         });
+
+        // Store the timestamp when the NFT was listed for sale
+        nftListings[tokenId].listingTimestamp = block.timestamp;
 
         // Emit event for listing the NFT for sale
         emit NFTListedForSale(msg.sender, tokenId, price);
