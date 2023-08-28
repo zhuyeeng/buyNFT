@@ -14,10 +14,9 @@ const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 const User = () => {
   const router = useRouter();
   const pid = router.query.user;
-  console.log(pid);
-  console.log(typeof(pid));
 
-  const [modifiedNFTData, setModifiedNFTData] = useState([]);
+  const [localAddress, setLocalAddress] = useState(''); 
+  // const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -30,37 +29,41 @@ const User = () => {
   };
 
   useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+
     setTimeout(() => {
       setCopied(false);
     }, 2000);
   }, [copied]);
+  console.log('test');
 
   return (
     <>
       <Meta title="User || Xhibiter | NFT Marketplace Next.js Template" />
       {/* <!-- Profile --> */}
-      {user_data
-        .filter((item) => item.id === pid)
-        .map((item) => {
-          const { id, image, title, userId, text, joinYear, icon, coverPhoto } =
-            item;
           return (
-            <div className="pt-[5.5rem] lg:pt-24" key={id}>
+            <div className="pt-[5.5rem] lg:pt-24" key={pid}>
               {/* <!-- Banner --> */}
               <div className="relative h-[18.75rem]">
-                <Image
+                {/* Cover Image need to set a default image for each user */}
+                {/* If the user image also need, also need to pick one default picture for each user */}
+                {/* <Image
                   width={1519}
                   height={300}
                   src={coverPhoto}
                   alt="banner"
                   className="w-full h-full object-cover"
-                />
+                /> */}
               </div>
               {/* <!-- end banner --> */}
               <section className="dark:bg-jacarta-800 bg-light-base relative pb-12 pt-28">
                 {/* <!-- Avatar --> */}
                 <div className="absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-                  <figure className="relative h-40 w-40 dark:border-jacarta-600 rounded-xl border-[5px] border-white">
+                  {/* <figure className="relative h-40 w-40 dark:border-jacarta-600 rounded-xl border-[5px] border-white">
                     <Image
                       width={141}
                       height={141}
@@ -85,14 +88,14 @@ const User = () => {
                         </svg>
                       )}
                     </div>
-                  </figure>
+                  </figure> */}
                 </div>
 
                 <div className="container">
                   <div className="text-center">
-                    <h2 className="font-display text-jacarta-700 mb-2 text-4xl font-medium dark:text-white">
+                    {/* <h2 className="font-display text-jacarta-700 mb-2 text-4xl font-medium dark:text-white">
                       {title}
-                    </h2>
+                    </h2> */}
                     <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 mb-8 inline-flex items-center justify-center rounded-full border bg-white py-1.5 px-4">
                       <Tippy content="ETH">
                         <svg className="icon h-4 w-4 mr-1">
@@ -108,21 +111,21 @@ const User = () => {
                       >
                         <button className="js-copy-clipboard dark:text-jacarta-200 max-w-[10rem] select-none overflow-hidden text-ellipsis whitespace-nowrap">
                           <CopyToClipboard
-                            text={userId}
+                            text={localAddress}
                             onCopy={() => setCopied(true)}
                           >
-                            <span>{userId}</span>
+                            <span>{`${localAddress}`}</span>
                           </CopyToClipboard>
                         </button>
                       </Tippy>
                     </div>
 
-                    <p className="dark:text-jacarta-300 mx-auto mb-2 max-w-xl text-lg">
+                    {/* <p className="dark:text-jacarta-300 mx-auto mb-2 max-w-xl text-lg">
                       {text}
                     </p>
                     <span className="text-jacarta-400">
                       Joined December {joinYear}
-                    </span>
+                    </span> */}
 
                     <div className="mt-6 flex items-center justify-center space-x-2.5 relative">
                       <div className="dark:border-jacarta-600 dark:hover:bg-jacarta-600 border-jacarta-100 hover:bg-jacarta-100 dark:bg-jacarta-700 rounded-xl border bg-white">
@@ -152,7 +155,6 @@ const User = () => {
               <User_items />
             </div>
           );
-        })}
     </>
   );
 };

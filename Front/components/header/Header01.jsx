@@ -59,8 +59,6 @@ export default function Header01() {
       setLocalBalance(storedBalance);
     }
 
-    // console.log(localAddress);
-
     window.addEventListener("resize", () => {
       if (window.innerWidth >= 1024) {
         setToggle(false);
