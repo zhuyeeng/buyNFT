@@ -273,17 +273,6 @@ const item = () => {
                       <div className="mb-8 sm:flex sm:flex-wrap">
                         {/* <!-- Highest bid --> */}
                         <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
-                          {/* <div className="block overflow-hidden text-ellipsis whitespace-nowrap">
-                            <span className="dark:text-jacarta-300 text-jacarta-400 text-sm">
-                              Highest bid by{" "}
-                            </span>
-                            <Link
-                              href="/user/avatar_6"
-                              className="text-accent text-sm font-bold"
-                            >
-                              0x695d2ef170ce69e794707eeef9497af2de25df82
-                            </Link>
-                          </div> */}
                           <div className="mt-3 flex">
                             <figure className="mr-4 shrink-0">
                               <Link href="#" className="relative block">
@@ -306,30 +295,44 @@ const item = () => {
                                     </svg>
                                   </span>
                                 </Tippy>
-                                <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                                  {price} ETH
-                                </span>
+
+                                {/* Using if statement */}
+                                {price !== null ? (
+                                  <span className="text-green text-lg font-medium leading-tight tracking-tight">
+                                    {price} ETH
+                                  </span>
+                                ) : (
+                                  <span className="text-red text-lg font-medium leading-tight tracking-tight">
+                                    Not for Sale
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      {/* <!-- Countdown --> */}
-                      <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 sm:border-l sm:pl-4 lg:pl-8">
-                          <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
-                            List Timer
-                          </span>
-                          <Items_Countdown_timer time={+auction_timer} />
-                      </div>
 
-                      <Link href="#">
-                        <button
-                          className = "bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                          onClick={() => dispatch(bidsModalShow(pid))}
-                        >
-                          Buy
-                        </button>
-                      </Link>
+                      {/* Conditionally render the rest */}
+                      {price !== null ? (
+                        <div>
+                          {/* <!-- Countdown --> */}
+                          <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
+                            <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
+                              List Timer
+                            </span>
+                            <Items_Countdown_timer time={+auction_timer} />
+                          </div>
+
+                          <Link href="#">
+                            <button
+                              className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                              onClick={() => dispatch(bidsModalShow(pid))}
+                            >
+                              Buy
+                            </button>
+                          </Link>
+                        </div>
+                      ) : null}
                     </div>
                     {/* <!-- end bid --> */}
                   </div>

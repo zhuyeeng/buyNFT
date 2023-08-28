@@ -40,7 +40,6 @@ async function getNFTData(nftContract, index) {
   let price = null;
   if (isForSale) {
     price = ethers.utils.formatEther(listing[1]); // Get the price if the NFT is for sale
-    // price = price * 10^^18;
   }
 
   const nftData = {
@@ -160,6 +159,10 @@ async function fetchCarouselNFTData() {
 }
 async function fetchCollectionNFTData() {
   try {
+    const nftContract = new ethers.Contract(nftContractAddress, contractAbi, provider);
+    nftContract.on("NFTListedForSale", (seller, tokenId, price, timestamp) => {
+      console.log(`NFT listed for sale: tokenId ${tokenId} by ${seller} at ${new Date(timestamp * 1000)}. Price: ${price}`);
+    });
     const nftDataWithUriData = await getNFTDataFromIPFS();
     const modifiedNftDatas = mapDataToCollectionFormat(nftDataWithUriData);
     return modifiedNftDatas;
@@ -180,3 +183,4 @@ async function fetchExploreCollectionNFTData() {
 
 export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData};
 // getAllNFTData();
+fetchCollectionNFTData();
