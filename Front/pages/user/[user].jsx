@@ -3,20 +3,17 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Social_dropdown from "../../components/dropdown/Social_dropdown";
 import Auctions_dropdown from "../../components/dropdown/Auctions_dropdown";
-import user_data from "../../data/user_data";
 import User_items from "../../components/user/User_items";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
-const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const User = () => {
   const router = useRouter();
   const pid = router.query.user;
 
   const [localAddress, setLocalAddress] = useState(''); 
-  // const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -51,13 +48,13 @@ const User = () => {
               <div className="relative h-[18.75rem]">
                 {/* Cover Image need to set a default image for each user */}
                 {/* If the user image also need, also need to pick one default picture for each user */}
-                {/* <Image
+                <Image
                   width={1519}
                   height={300}
-                  src={coverPhoto}
+                  src="/images/user/banner.jpg"
                   alt="banner"
                   className="w-full h-full object-cover"
-                /> */}
+                />
               </div>
               {/* <!-- end banner --> */}
               <section className="dark:bg-jacarta-800 bg-light-base relative pb-12 pt-28">

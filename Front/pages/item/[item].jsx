@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { items_data } from "../../data/items_data";
-import Auctions_dropdown from "../../components/dropdown/Auctions_dropdown";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
@@ -63,7 +61,8 @@ const item = () => {
                 ownerName,
                 royalty,
                 price,
-                auction_timer,
+                ListedTime,
+                // auction_timer,
               } = item;
               console.log(modifiedNFTData);
 
@@ -318,9 +317,10 @@ const item = () => {
                           {/* <!-- Countdown --> */}
                           <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
                             <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
-                              List Timer
+                              Listed Time
                             </span>
-                            <Items_Countdown_timer time={+auction_timer} />
+                            <h3>{ListedTime}</h3>
+                            {/* <Items_Countdown_timer time={+auction_timer} /> */}
                           </div>
 
                           <Link href="#">

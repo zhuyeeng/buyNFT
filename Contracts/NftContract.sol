@@ -22,6 +22,7 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
 
     mapping(uint256 => Listing) public nftListings;
     mapping(uint256 => address) public tokenCreators;
+    // mapping(uint256 => uint256) public nftListingTimes;
 
     event NFTListedForSale(address indexed seller, uint256 tokenId, uint256 price);
     event NFTPurchased(address buyer, uint256 tokenId, uint256 price);
@@ -33,6 +34,7 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
         address seller;
         uint256 price;
         bool isForSale;
+        uint256 listingTimestamp;
     }
 
     constructor(uint256 maxSupply) ERC721("NftContract", "NFTC") {
@@ -88,17 +90,17 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
     }
 
     //external function
-    //The original owner of the NFT unable to get and need to store the orignal owner address, so that the royalty fee can transfer to the person.
-    function buyNFT(uint256 tokenId) external payable nonReentrant{
+    function buyNFT(uint256 tokenId) external payable nonReentrant {
         Listing memory listing = nftListings[tokenId];
 
         require(listing.isForSale, "NFT is not for sale");
+        require(msg.sender != listing.seller, "You cannot buy your own NFT");
+        require(msg.value >= listing.price, "Insufficient funds sent");
+
         address payable sellerAddress = payable(listing.seller);
         address payable originalCreator = payable(tokenCreators[tokenId]);
 
         uint256 price = listing.price;
-        require(msg.value >= price, "Insufficient funds sent");
-
         uint256 royaltyAmount = (price * royaltyPercentage) / 100;
         uint256 remainingAmount = price - royaltyAmount;
         _transfer(sellerAddress, msg.sender, tokenId);
@@ -113,7 +115,6 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
 
         // Remove the NFT listing
         delete nftListings[tokenId];
-
     }
 
     function sellNFT(uint256 tokenId, uint256 price) external {
@@ -121,11 +122,9 @@ contract NftContract is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable, Ree
         nftListings[tokenId] = Listing({
             seller: msg.sender,
             price: price,
-            isForSale: true
+            isForSale: true,
+            listingTimestamp: block.timestamp // Store the timestamp when the NFT was listed for sale
         });
-
-        // Store the timestamp when the NFT was listed for sale
-        // nftListings[tokenId].listingTimestamp = block.timestamp;
 
         // Emit event for listing the NFT for sale
         emit NFTListedForSale(msg.sender, tokenId, price);

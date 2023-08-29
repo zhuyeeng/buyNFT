@@ -24,6 +24,7 @@ async function getAllNFTData() {
       nftUri: result.tokenURI,
       royaltyPercentage: result.royaltyPercentage,
       nftPrice: result.price,
+      nftListedTime: result.NFTListedTime  ,
     });
   });
   return nftData;
@@ -36,11 +37,25 @@ async function getNFTData(nftContract, index) {
   const royaltyPercentage = await nftContract.royaltyPercentage();
 
   const isForSale = listing[2]; // Check if the NFT is for sale
+  const listingTimestamp = listing[3]; // Get the listing timestamp
 
   let price = null;
   if (isForSale) {
     price = ethers.utils.formatEther(listing[1]); // Get the price if the NFT is for sale
   }
+
+  const timestamp = listingTimestamp;
+  const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+
+  var today = new Date();
+  var timeDifference = today.getTime() - date.getTime(); // Calculate the time difference in milliseconds
+
+  // Convert time difference to hours, minutes, and seconds
+  var hours = Math.floor(timeDifference / 3600000);
+  var minutes = Math.floor((timeDifference % 3600000) / 60000);
+  var seconds = Math.floor((timeDifference % 60000) / 1000);
+
+  let NFTListedTime = hours + "h " + minutes + "m " + seconds + "s";
 
   const nftData = {
     tokenOwner,
@@ -48,9 +63,8 @@ async function getNFTData(nftContract, index) {
     royaltyPercentage,
     isForSale,
     price,
+    NFTListedTime, // Include the listing timestamp in the data
   };
-
-  console.log(nftData);
 
   return nftData;
 }
@@ -86,6 +100,7 @@ function mapDataToCarouselFormat(nftDataArray) {
       ownerName: item.ownerName,
       royalty: item.percentage,
       price: item.nftPrice,
+      ListedTime: item.nftListedTime,
       title: 'Lorem Ipsum',
       like: 160,
       creatorImage: item.uriData.image,
@@ -182,5 +197,3 @@ async function fetchExploreCollectionNFTData() {
 }
 
 export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData};
-// getAllNFTData();
-fetchCollectionNFTData();
