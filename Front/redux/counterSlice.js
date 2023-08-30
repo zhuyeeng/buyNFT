@@ -15,8 +15,6 @@ const initialState = {
   buyModal: false,
   propartiesModalValue: false,
   trendingCategorySorText: "",
-  defaultAccount: null,
-  userBalance: null,
   price: null,
 };
 
@@ -165,12 +163,6 @@ export const counterSlice = createSlice({
       }
       state.filteredRenkingData = tempItem;
     },
-    setWalletAddress: (state, action) => {
-      state.defaultAccount = action.payload;
-    },
-    setBalance: (state, action) => {
-      state.userBalance = action.payload;
-    },
   },
 });
 
@@ -197,8 +189,6 @@ export const {
   updateRenkingData,
   updateRenkingDataByBlockchain,
   updateRenkingDataByPostdate,
-  setWalletAddress,
-  setBalance
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

@@ -15,17 +15,17 @@ import WalletRefresh from '../wallet-btn/WalletRefresh';
 import { useSelector } from "react-redux";
 import { useWallet } from '../../context/walletContext';
 
-function DefaultAccountComponent() {
-  const defaultAccount = useSelector((state) => state.counter.defaultAccount);
+// function DefaultAccountComponent() {
+//   const defaultAccount = useSelector((state) => state.counter.defaultAccount);
 
-  return <span>{defaultAccount}</span>;
-}
+//   return <span>{defaultAccount}</span>;
+// }
 
-function UserBalanceComponent() {
-  const userBalance = useSelector((state) => state.counter.userBalance);
+// function UserBalanceComponent() {
+//   const userBalance = useSelector((state) => state.counter.userBalance);
 
-  return <span>{userBalance}</span>;
-}
+//   return <span>{userBalance}</span>;
+// }
 
 export default function Header01() {
   const { updateAccount, updateBalance  } = useWallet();

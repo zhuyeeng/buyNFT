@@ -10,7 +10,7 @@ import txUpdateDisplay from '../../utils/txUpdateDisplay';
 
 const BidsModal = () => {
   const { account, balance } = useWallet();
-
+  const [localBalance, setLocalBalance] = useState('');
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
   const [payAmount, setPayAmount] = useState("");
   const { bidsModal } = useSelector((state) => state.counter);
@@ -22,6 +22,11 @@ const BidsModal = () => {
   const { buy } = isWalletInitialized ? nftBuySellHooks : {};
   
   useEffect(() => {
+    const storedBalance = localStorage.getItem('accountBalance');
+    if (storedBalance) {
+      setLocalBalance(storedBalance);
+    }
+
     if (account && balance) {
       setIsWalletInitialized(true);
       console.log("Wallet Initialized");
@@ -117,7 +122,7 @@ const BidsModal = () => {
 
               <div className="text-right">
                 <span className="dark:text-jacarta-400 text-sm">
-                  Balance: 0.0000 WETH
+                  Balance: {`${localBalance}`} WETH
                 </span>
               </div>
 

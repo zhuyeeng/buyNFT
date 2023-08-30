@@ -7,12 +7,28 @@ import Likes from "../likes";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../redux/counterSlice";
+const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const CategoryItem = () => {
+  const [modifiedNFTData, setModifiedNFTData] = useState([]);
+  const [localAddress, setLocalAddress] = useState(''); 
+
   const { sortedtrendingCategoryItemData } = useSelector(
     (state) => state.counter
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+
+    fetchCarouselNFTData()
+    .then((data) => setModifiedNFTData(data))
+    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  },[])
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
