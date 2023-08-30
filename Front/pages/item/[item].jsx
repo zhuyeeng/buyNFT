@@ -298,7 +298,7 @@ const item = () => {
                                 {/* Using if statement */}
                                 {price !== null ? (
                                   <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                                    {price} ETH
+                                    {`${price.substring(0,3)}..${price.slice(-4)}`} ETH
                                   </span>
                                 ) : (
                                   <span className="text-red text-lg font-medium leading-tight tracking-tight">
@@ -326,7 +326,7 @@ const item = () => {
                           <Link href="#">
                             <button
                               className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                              onClick={() => dispatch(bidsModalShow(pid))}
+                              onClick={() => dispatch(bidsModalShow({pid,price}))}
                             >
                               Buy
                             </button>

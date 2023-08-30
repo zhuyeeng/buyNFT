@@ -17,7 +17,6 @@ const BidsModal = () => {
   const dispatch = useDispatch();
 
   const pid = useSelector(state => state.counter.pid);
-  console.log('pid:',pid);
 
   const nftBuySellHooks = useNftBuySell();
   const { buy } = isWalletInitialized ? nftBuySellHooks : {};
@@ -109,7 +108,7 @@ const BidsModal = () => {
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
                   placeholder="Amount"
-                  value={payAmount}
+                  value={pid.price}
                   onChange={(e) => setPayAmount(e.target.value)}
                 />
 
