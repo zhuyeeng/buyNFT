@@ -17,6 +17,7 @@ const initialState = {
   trendingCategorySorText: "",
   defaultAccount: null,
   userBalance: null,
+  price: null,
 };
 
 export const counterSlice = createSlice({

@@ -29,7 +29,7 @@ const BidsModal = () => {
   }, [account, balance]);
 
   const buyAction = async () => {
-    // console.log(typeof(payAmount));
+
     if (!buy) {
       console.error("buy function is not initialized yet.");
       return;
@@ -46,13 +46,11 @@ const BidsModal = () => {
         await nftBuySellHooks.buy(pid, payAmount);
         console.log(typeof(payAmount));
         console.log('success');
-        // await txUpdateDisplay(transactionPromise, provider, account, updateBalance);
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
       }else{
         console.error('wallet not initialized.');
       }
     }catch(error){
-      // console.log(typeof(payAmount));
+
       console.error(error);
     }
   }
@@ -108,7 +106,7 @@ const BidsModal = () => {
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
                   placeholder="Amount"
-                  value={pid.price}
+                  value={pid?.price || ''}
                   onChange={(e) => setPayAmount(e.target.value)}
                 />
 
