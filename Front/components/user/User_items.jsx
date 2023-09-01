@@ -18,21 +18,6 @@ const User_items = () => {
       text: "owned",
       icon: "owned",
     },
-    {
-      id: 3,
-      text: "created(20)",
-      icon: "created",
-    },
-    {
-      id: 4,
-      text: "collections",
-      icon: "listing",
-    },
-    {
-      id: 5,
-      text: "Activity",
-      icon: "activity",
-    },
   ];
   return (
     <>

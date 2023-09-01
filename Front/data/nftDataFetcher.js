@@ -116,30 +116,67 @@ function mapDataToCarouselFormat(nftDataArray) {
 function mapDataToCollectionFormat(nftDataArray) {
   return nftDataArray.map((item, index) => {
     return {
-      image: item.uriData.image, // adjust as needed
-      id: index, // adjust as needed
-      category: "Collectibles", // you may need to adjust or derive this
-      title: item.uriData.name,
+      ownerName: item.ownerName,
+      image: item.uriData.image,
+      id: index,
+      category: "art", // you may need to adjust or derive this
+      title: 'Lorem Ipsum',
       nfsw: false, // you may need to adjust or derive this
       lazyMinted: true, // you may need to adjust or derive this
       verified: true, // you may need to adjust or derive this
       addDate: `date #${index}`, // you may need to adjust or derive this
       sortPrice: 5.9, // you may need to adjust or derive this
-      price: `From ${5.9} ETH`, // adjust as needed
+      price: item.nftPrice,
       bidLimit: 7, // you may need to adjust or derive this
       bidCount: 1, // you may need to adjust or derive this
       likes: 188, // you may need to adjust or derive this
       creator: {
-        name: `demo #${index}`, // you may need to adjust or derive this
+        name: `hello`, // you may need to adjust or derive this
         image: item.uriData.image, // adjust as needed
       },
       owner: {
-        name: `owner #${index}`, // you may need to adjust or derive this
+        name: `test`, // you may need to adjust or derive this
         image: item.uriData.image, // adjust as needed
       },
     };
   });
 }
+
+// function profileData(nftDataArray) {
+//   return nftDataArray.map((item, index) => {
+//     return {
+//       id: index,
+//       image: item.uriData.image,
+//       title: 'Lorem Ipsum',
+//       price: item.nftPrice,
+//       like: 160,
+//       creatorName: 'hello',
+//       ownerName: item.ownerName,
+
+//       image: item.uriData.image,
+//       id: index,
+//       category: "art",
+//       title: "Flourishing Cat #180",
+//       nfsw: true,
+//       lazyMinted: false,
+//       verified: true,
+//       addDate: 1,
+//       sortPrice: 8.49,
+//       price: "From 8.49 ETH",
+//       bidLimit: 8,
+//       bidCount: 2,
+//       likes: 15,
+//       creator: {
+//         name: "Sussygirl",
+//         image: "/images/avatars/creator_1.png",
+//       },
+//       owner: {
+//         name: "Sussygirl",
+//         image: "/images/avatars/owner_1.png",
+//       },
+//     };
+//   });
+// }
 
 function mapToFeatureCollectionsFormat(nftDataArray) {
   return nftDataArray.map((item, index) => {
@@ -172,6 +209,17 @@ async function fetchCarouselNFTData() {
     console.error('Error fetching NFT data:', error.message);
   }
 }
+
+// async function fetchProfileNFTData() {
+//   try {
+//     const nftData = await getNFTDataFromIPFS();
+//     const nftDatas = profileData(nftData);
+//     return nftDatas;
+//   } catch (error) {
+//     console.error('Error fetching NFT data:', error.message);
+//   }
+// }
+
 async function fetchCollectionNFTData() {
   try {
     const nftContract = new ethers.Contract(nftContractAddress, contractAbi, provider);
@@ -196,4 +244,4 @@ async function fetchExploreCollectionNFTData() {
   }
 }
 
-export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData};
+export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData };

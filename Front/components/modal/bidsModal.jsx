@@ -110,8 +110,8 @@ const BidsModal = () => {
                 <input
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
-                  placeholder="Amount"
-                  value={pid?.price || ''}
+                  placeholder={pid?.price || ''}
+                  value={payAmount}
                   onChange={(e) => setPayAmount(e.target.value)}
                 />
 
