@@ -15,6 +15,7 @@ import Image from "next/image";
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const item = () => {
+  const [localAddress, setLocalAddress] = useState(''); 
   const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -23,6 +24,10 @@ const item = () => {
   const [imageModal, setImageModal] = useState(false);
 
   useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
     // Call the asynchronous function and set the state with the result
     fetchCarouselNFTData()
       .then((data) => setModifiedNFTData(data))
@@ -311,28 +316,42 @@ const item = () => {
                         </div>
                       </div>
 
-                      {/* Conditionally render the rest */}
-                      {price !== null ? (
-                        <div>
-                          {/* <!-- Countdown --> */}
-                          <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
-                            <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
-                              Listed Time
-                            </span>
-                            <h3>{ListedTime}</h3>
-                            {/* <Items_Countdown_timer time={+auction_timer} /> */}
-                          </div>
+                      {/* Conditionally render the Buy/Sell button */}
+              {price !== null && ownerName.toLowerCase() !== localAddress ? (
+                <div>
+                  {/* <!-- Countdown --> */}
+                  <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
+                    <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
+                      Listed Time
+                    </span>
+                    <h3>{ListedTime}</h3>
+                    {/* <Items_Countdown_timer time={+auction_timer} /> */}
+                  </div>
 
-                          <Link href="#">
-                            <button
-                              className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                              onClick={() => dispatch(bidsModalShow({pid,price}))}
-                            >
-                              Buy
-                            </button>
-                          </Link>
-                        </div>
-                      ) : null}
+                  <Link href="#">
+                    <button
+                      className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                      onClick={() => dispatch(bidsModalShow({pid,price}))}
+                    >
+                      Buy
+                    </button>
+                  </Link>
+                </div>
+              ) : null}
+
+              {/* Conditionally render the Sell button */}
+              {ownerName.toLowerCase() === localAddress ? (
+                <div>
+                  <Link href="#">
+                    <button
+                      className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                      onClick={() => dispatch(bidsModalShow({pid,price}))}
+                    >
+                      Sell
+                    </button>
+                  </Link>
+                </div>
+              ) : null}
                     </div>
                     {/* <!-- end bid --> */}
                   </div>

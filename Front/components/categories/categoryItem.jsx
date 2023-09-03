@@ -106,11 +106,11 @@ const CategoryItem = () => {
               </div>
               <div className="mt-2 text-sm">
                 <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                  {price}
+                {`${price.substring(0,5)}..${price.slice(-4)}`}
                 </span>
-                <span className="dark:text-jacarta-300 text-jacarta-500">
+                {/* <span className="dark:text-jacarta-300 text-jacarta-500">
                   {bidCount}/{bidLimit}
-                </span>
+                </span> */}
               </div>
 
               <div className="mt-8 flex items-center justify-between">

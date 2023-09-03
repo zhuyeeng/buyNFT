@@ -75,14 +75,14 @@ const User_items = () => {
                 <Trending_categories_items />
               </div>
             </TabPanel>
-            <TabPanel>
+            {/* <TabPanel>
               <div>
-                {/* <!-- Filter --> */}
+                
                 <Trending_categories_items />
               </div>
             </TabPanel>
             <TabPanel>
-              {/* <!-- Grid --> */}
+              
               <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
                 <Explore_collection_item itemFor="userPage" />
               </div>
@@ -91,7 +91,7 @@ const User_items = () => {
               <div>
                 <Activity_item />
               </div>
-            </TabPanel>
+            </TabPanel> */}
           </Tabs>
         </div>
       </section>
