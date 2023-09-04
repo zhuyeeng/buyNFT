@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { bidsModalHide } from "../../redux/counterSlice";
-import contractAbi from '../../data/abi/nftMintAbi.json';
-import { nftContractAddress, providerURL } from '../../config/setting';
-import { ethers, providers } from 'ethers';
+// import contractAbi from '../../data/abi/nftMintAbi.json';
+// import { nftContractAddress, providerURL } from '../../config/setting';
+import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
 import useNftBuySell from '../../components/nftBuySell/nftBuySell';
-import txUpdateDisplay from '../../utils/txUpdateDisplay';
+// import txUpdateDisplay from '../../utils/txUpdateDisplay';
 
 const BidsModal = () => {
   const { account, balance } = useWallet();

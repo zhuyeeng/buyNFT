@@ -45,6 +45,7 @@ const CategoryItem = () => {
           creator,
           owner,
         } = item;
+        console.log(userNFTs);
         const itemLink = image
           .split("/")
           .slice(-1)
@@ -105,9 +106,11 @@ const CategoryItem = () => {
                 <Auctions_dropdown classes="dark:hover:bg-jacarta-600 dropup hover:bg-jacarta-100 rounded-full " />
               </div>
               <div className="mt-2 text-sm">
-                <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                {`${price.substring(0,5)}..${price.slice(-4)}`}
-                </span>
+                {price !== null ?(
+                  <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
+                  {`${price.substring(0,5)}..${price.slice(-4)}`}
+                  </span>
+                ):null}
                 {/* <span className="dark:text-jacarta-300 text-jacarta-500">
                   {bidCount}/{bidLimit}
                 </span> */}
