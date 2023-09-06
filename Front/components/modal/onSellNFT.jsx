@@ -1,54 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { bidsModalHide } from "../../redux/counterSlice";
+import { testsModalHide } from "../../redux/counterSlice";
 // import contractAbi from '../../data/abi/nftMintAbi.json';
 // import { nftContractAddress, providerURL } from '../../config/setting';
 import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
-import useNftBuySell from '../../components/nftBuySell/nftBuySell';
+import useNftBuySell from '../nftBuySell/nftBuySell';
 // import txUpdateDisplay from '../../utils/txUpdateDisplay';
 
-const BidsModal = () => {
+const TestsModal = () => {
   const { account, balance } = useWallet();
-  const [localBalance, setLocalBalance] = useState('');
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
-  const [payAmount, setPayAmount] = useState("");
-  const { bidsModal } = useSelector((state) => state.counter);
+  const [priceAmount, setPriceAmount] = useState("");
+  const { testsModal } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
 
   const pid = useSelector(state => state.counter.pid);
 
   const nftBuySellHooks = useNftBuySell();
-  const { buy } = isWalletInitialized ? nftBuySellHooks : {};
+  const { sellNFT } = isWalletInitialized ? nftBuySellHooks : {};
   
   useEffect(() => {
-    const storedBalance = localStorage.getItem('accountBalance');
-    if (storedBalance) {
-      setLocalBalance(storedBalance);
-    }
-
     if (account && balance) {
       setIsWalletInitialized(true);
       console.log("Wallet Initialized");
     }
   }, [account, balance]);
 
-  const buyAction = async () => {
-
-    if (!buy) {
-      console.error("buy function is not initialized yet.");
+  const sellAction = async () => {
+    if (!sellNFT) {
+      console.error("sell function is not initialized yet.");
       return;
     }
-    if (!payAmount) {
+    if (!priceAmount) {
       console.error("Parsed payAmount is undefined.");
       return;
     }
-    
     try{
       if(isWalletInitialized){
-        const parsedPayAmount = ethers.utils.parseUnits(payAmount);
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await nftBuySellHooks.buy(pid, payAmount);
+        // const parsedPayAmount = ethers.utils.parseUnits(payAmount);
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await nftBuySellHooks.sellNFT(pid, priceAmount);
         console.log(typeof(payAmount));
         console.log('success');
       }else{
@@ -61,17 +53,17 @@ const BidsModal = () => {
 
   return (
     <div>
-      <div className={bidsModal ? "modal fade show block" : "modal fade"}>
+      <div className={testsModal ? "modal fade show block" : "modal fade"}>
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="placeBidLabel">
-                Place a bid
+                List For Sale
               </h5>
               <button
                 type="button"
                 className="btn-close"
-                onClick={() => dispatch(bidsModalHide())}
+                onClick={() => dispatch(testsModalHide())}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -110,8 +102,8 @@ const BidsModal = () => {
                   type="number"
                   className="focus:ring-accent h-12 w-full flex-[3] border-0 focus:ring-inse dark:text-jacarta-700"
                   placeholder={pid?.price || ''}
-                  value={payAmount}
-                  onChange={(e) => setPayAmount(e.target.value)}
+                  value={priceAmount}
+                  onChange={(e) => setPriceAmount(e.target.value)}
                 />
 
                 <div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">
@@ -119,11 +111,11 @@ const BidsModal = () => {
                 </div>
               </div>
 
-              <div className="text-right">
+              {/* <div className="text-right">
                 <span className="dark:text-jacarta-400 text-sm">
                   Balance: {`${localBalance}`} WETH
                 </span>
-              </div>
+              </div> */}
 
               {/* <!-- Terms --> */}
               <div className="mt-4 flex items-center space-x-2">
@@ -150,9 +142,9 @@ const BidsModal = () => {
                 <button
                   type="button"
                   className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                  onClick={buyAction}
+                  onClick={sellAction}
                 >
-                  Buy
+                  Sell
                 </button>
               </div>
             </div>
@@ -163,4 +155,4 @@ const BidsModal = () => {
   );
 };
 
-export default BidsModal;
+export default TestsModal;

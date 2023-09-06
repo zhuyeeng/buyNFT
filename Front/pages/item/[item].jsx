@@ -9,7 +9,7 @@ import More_items from "./more_items";
 import Likes from "../../components/likes";
 import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
-import { bidsModalShow, sellModalShow } from "../../redux/counterSlice";
+import { bidsModalShow, testsModalShow } from "../../redux/counterSlice";
 import Image from "next/image";
 
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
@@ -272,14 +272,13 @@ const item = () => {
                       </div>
                     </div>
 
-                    {/* <!-- Bid --> */}
+                    {/*Bid*/}
                     <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
-                      {/* <div className="mb-8 sm:flex sm:flex-wrap"> */}
+                      <div className="mb-8 sm:flex sm:flex-wrap">
                         {/* <!-- Highest bid --> */}
-                        {/* <div className="sm:w-1/2 sm:pr-4 lg:pr-8"> */}
-
-                          {/* <div className="mt-3 flex"> */}
-                            {/* <figure className="mr-4 shrink-0">
+                        <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
+                          <div className="mt-3 flex">
+                            <figure className="mr-4 shrink-0">
                               <Link href="#" className="relative block">
                                 <Image
                                   width={48}
@@ -290,18 +289,16 @@ const item = () => {
                                   loading="lazy"
                                 />
                               </Link>
-                            </figure> */}
-
-                            {/* <div> */}
-                              {/* <div className="flex items-center whitespace-nowrap">
+                            </figure>
+                            <div>
+                              <div className="flex items-center whitespace-nowrap">
                                 <Tippy content={<span>ETH</span>}>
                                   <span className="-ml-1">
                                     <svg className="icon mr-1 h-4 w-4">
                                       <use xlinkHref="/icons.svg#icon-ETH"></use>
                                     </svg>
                                   </span>
-                                </Tippy> */}
-
+                                </Tippy>
                                 {/* Using if statement */}
                                 {price !== null ? (
                                   <span className="text-green text-lg font-medium leading-tight tracking-tight">
@@ -312,74 +309,60 @@ const item = () => {
                                     Not for Sale
                                   </span>
                                 )}
-                              {/* </div> */}
-                            {/* </div> */}
-                          {/* </div> */}
-                        {/* </div> */}
-                      {/* </div> */}
-
-                      {/* Conditionally render the Buy/Sell button */}
-                      {price !== null && ownerName.toLowerCase() !== localAddress ? (
-                        <div className="mt-3 flex">
-                          <figure className="mr-4 shrink-0">
-                            <Link href="#" className="relative block">
-                              <Image
-                                width={48}
-                                height={48}
-                                src="/images/avatars/avatar_4.jpg"
-                                alt="avatar"
-                                className="rounded-2lg h-12 w-12"
-                                loading="lazy"
-                              />
-                            </Link>
-                          </figure>
-                          <div>
-                            <div className="flex items-center whitespace-nowrap">
-                              <Tippy content={<span>ETH</span>}>
-                                <span className="-ml-1">
-                                  <svg className="icon mr-1 h-4 w-4">
-                                    <use xlinkHref="/icons.svg#icon-ETH"></use>
-                                  </svg>
-                                </span>
-                              </Tippy>
-                              <div>
-                                {/* Countdown */}
-                                <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
-                                  <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
-                                    Listed Time
-                                  </span>
-                                  <h3>{ListedTime}</h3>
-                                  {/* <Items_Countdown_timer time={+auction_timer} /> */}
-                                </div>
-                                <Link href="#">
-                                  <button
-                                    className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                                    onClick={() => dispatch(bidsModalShow({ pid, price }))}
-                                  >
-                                    Buy
-                                  </button>
-                                </Link>
                               </div>
                             </div>
                           </div>
                         </div>
-                      ) : null}
+                      </div>
 
-                      {/* Conditionally render the Sell button */}
-                      {ownerName.toLowerCase() === localAddress ? (
+                      {price !== null && ownerName.toLowerCase() !== localAddress ? (
                         <div>
+                          {/* <!-- Countdown --> */}
+                          <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
+                            <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
+                              Listed Time
+                            </span>
+                            <h3>{ListedTime}</h3>
+                          </div>
                           <Link href="#">
                             <button
                               className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                              onClick={() => dispatch(sellModalShow({ pid }))}
+                              onClick={() => dispatch(bidsModalShow({ pid, price }))}
                             >
-                              Sell
+                              Buy
                             </button>
                           </Link>
                         </div>
                       ) : null}
+
+                      {price === null && ownerName.toLowerCase() === localAddress ? (
+                      <div>
+                        <Link href="#">
+                          <button
+                            className="bg-accent shadow-accent-volume hover:bg-accent-dark inline-block w-full rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
+                            onClick={() => dispatch(testsModalShow({ pid, price }))}
+                          >
+                            Sell
+                          </button>
+                        </Link>
+                      </div>
+                      ):null}
+
+                      {price !== null && ownerName.toLowerCase() === localAddress ? (
+                      <div>
+                        {/* <!-- Countdown --> */}
+                        <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">
+                          <span className="js-countdown-ends-label text-jacarta-400 dark:text-jacarta-300 text-sm">
+                            Listed Time
+                          </span>
+                          <h3>{ListedTime}</h3>
+                        </div>
+                      </div>
+                      ):null}
+
                     </div>
                     {/* <!-- end bid --> */}
+
                   </div>
                   {/* <!-- end details --> */}
                 </div>

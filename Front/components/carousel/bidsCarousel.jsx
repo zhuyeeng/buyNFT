@@ -14,6 +14,7 @@ import Likes from "../likes";
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
 
 const BidsCarousel = () => {
+  const [localAddress, setLocalAddress] = useState('');
   const [modifiedNFTData, setModifiedNFTData] = useState([]);
   const dispatch = useDispatch();
   const handleclick = () => {
@@ -21,6 +22,10 @@ const BidsCarousel = () => {
   };
 
   useEffect(() => {
+    const storeAddress = localStorage.getItem('defaultAccount');
+    if(storeAddress){
+      setLocalAddress(storeAddress);
+    }
     // Call the asynchronous function and set the state with the result
     fetchCarouselNFTData()
       .then((data) => setModifiedNFTData(data))
@@ -55,7 +60,7 @@ const BidsCarousel = () => {
         className=" card-slider-4-columns !py-5"
       >
         {modifiedNFTData.map((item) => {
-          const { id, image, title, bid_number, eth_number } =
+          const { id, image, title, bid_number, price, ownerName } =
             item;
 
           const itemLink = id;
@@ -93,10 +98,15 @@ const BidsCarousel = () => {
                           className="w-3 h-3 mr-1"
                         />
                       </Tippy>
-
-                      <span className="text-green text-sm font-medium tracking-tight">
-                        {eth_number} ETH
-                      </span>
+                      {price !== null ? (
+                        <span className="text-green text-sm font-medium tracking-tight">
+                        {`${price.substring(0,5)}..${price.slice(-2)}`} ETH
+                        </span>
+                      ):(
+                        <span className="text-green text-sm font-medium tracking-tight">
+                          Not For Sale
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div className="mt-2 text-sm">
@@ -108,7 +118,12 @@ const BidsCarousel = () => {
                     </span>
                   </div>
 
-                  <div className="mt-8 flex items-center justify-between">
+                  {ownerName.toLowerCase() === localAddress ? (
+                    <div className="mt-8 flex items-center justify-between">
+                      <h1>Owned</h1>
+                    </div>
+                  ):(
+                    <div className="mt-8 flex items-center justify-between">
                     <button
                       type="button"
                       className="text-accent font-display text-sm font-semibold"
@@ -116,12 +131,8 @@ const BidsCarousel = () => {
                     >
                       Buy
                     </button>
-
-                    {/* <Likes
-                      like={react_number}
-                      classes="flex items-center space-x-1"
-                    /> */}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </article>
             </SwiperSlide>

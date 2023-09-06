@@ -142,42 +142,6 @@ function mapDataToCollectionFormat(nftDataArray) {
   });
 }
 
-// function profileData(nftDataArray) {
-//   return nftDataArray.map((item, index) => {
-//     return {
-//       id: index,
-//       image: item.uriData.image,
-//       title: 'Lorem Ipsum',
-//       price: item.nftPrice,
-//       like: 160,
-//       creatorName: 'hello',
-//       ownerName: item.ownerName,
-
-//       image: item.uriData.image,
-//       id: index,
-//       category: "art",
-//       title: "Flourishing Cat #180",
-//       nfsw: true,
-//       lazyMinted: false,
-//       verified: true,
-//       addDate: 1,
-//       sortPrice: 8.49,
-//       price: "From 8.49 ETH",
-//       bidLimit: 8,
-//       bidCount: 2,
-//       likes: 15,
-//       creator: {
-//         name: "Sussygirl",
-//         image: "/images/avatars/creator_1.png",
-//       },
-//       owner: {
-//         name: "Sussygirl",
-//         image: "/images/avatars/owner_1.png",
-//       },
-//     };
-//   });
-// }
-
 function mapToFeatureCollectionsFormat(nftDataArray) {
   return nftDataArray.map((item, index) => {
     return 	{
@@ -200,6 +164,35 @@ function mapToFeatureCollectionsFormat(nftDataArray) {
   });
 }
 
+function categoriesData(nftDataArray){
+  return nftDataArray.map((item, index) => {
+    return {
+      ownerName: item.ownerName,
+        image: item.uriData.image,
+        id: "Amazing NFT art1",
+        category: "Collectibles",
+        title: "Amazing NFT art",
+        nfsw: true,
+        lazyMinted: false,
+        verified: false,
+        addDate: 2,
+        sortPrice: 5.9,
+        price: item.nftPrice,
+        bidLimit: 7,
+        bidCount: 1,
+        likes: 188,
+        creator: {
+          name: "Sussygirl",
+          image: item.uriData.image,
+        },
+        owner: {
+          name: "Sussygirl",
+          image: item.uriData.image,
+        },
+    }
+  });
+}
+
 async function fetchCarouselNFTData() {
   try {
     const nftDataWithUriData = await getNFTDataFromIPFS();
@@ -209,16 +202,6 @@ async function fetchCarouselNFTData() {
     console.error('Error fetching NFT data:', error.message);
   }
 }
-
-// async function fetchProfileNFTData() {
-//   try {
-//     const nftData = await getNFTDataFromIPFS();
-//     const nftDatas = profileData(nftData);
-//     return nftDatas;
-//   } catch (error) {
-//     console.error('Error fetching NFT data:', error.message);
-//   }
-// }
 
 async function fetchCollectionNFTData() {
   try {
@@ -244,4 +227,14 @@ async function fetchExploreCollectionNFTData() {
   }
 }
 
-export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData };
+async function fetchCategoriesNFTData(){
+  try{
+    const nftDataWithUriData = await getNFTDataFromIPFS();
+    const modifiedNftDatas = categoriesData(nftDataWithUriData);
+    return modifiedNftDatas;
+  }catch(error){
+    console.error('Error fetching categories data: ', error.message);
+  }
+}
+
+export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData, fetchCategoriesNFTData };

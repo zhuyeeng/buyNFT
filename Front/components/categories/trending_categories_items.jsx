@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { tranding_category_filter } from "../../data/categories_data";
 import CategoryItem from "./categoryItem";
-import { fetchCollectionNFTData } from "../../data/categories_data";
+import { trendingCategoryData } from "../../data/categories_data";
 import Tippy from "@tippyjs/react";
 import Recently_added_dropdown from "../dropdown/recently_added_dropdown";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTrendingCategoryItemData } from "../../redux/counterSlice";
+const { fetchCategoriesNFTData } = require('../../data/nftDataFetcher');
 
 const Trending_categories_items = () => {
-  const [itemData, setItemData] = useState([]);
+  const [itemdata, setItemdata] = useState([]);
   const dispatch = useDispatch();
-  const { trendingCategorySorText } = useSelector((state) => state.counter);
+  const [localAddress, setLocalAddress] = useState('');
   const [filterVal, setFilterVal] = useState(0);
 
   const handleFilter = (category) => {
     if (category !== "all") {
-      setItemData(
-        fetchCollectionNFTData.filter((item) => item.category === category)
+      setItemdata(
+        fetchCategoriesNFTData().filter((item) => item.category === category)
       );
     } else {
-      setItemData(fetchCollectionNFTData);
+      setItemdata(fetchCategoriesNFTData());
     }
   };
 
@@ -43,14 +44,21 @@ const Trending_categories_items = () => {
   ];
 
   useEffect(() => {
-    fetchCollectionNFTData()
-      .then(data => {
-        setItemData(data);
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+
+    fetchCategoriesNFTData()
+      .then((data) => {
+        console.log(data);
+        const filterdData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
+        setItemdata(filterdData);
       })
-      .catch(error => {
-        console.error("Error fetching the NFT data:", error);
-      });
-  }, []);
+      .catch((error) => console.error('Error fetching and proicessing NFT data: ', error.message));
+    dispatch(updateTrendingCategoryItemData(itemdata.slice(0, 8)));
+  }, [itemdata, dispatch]);
 
   return (
     <>

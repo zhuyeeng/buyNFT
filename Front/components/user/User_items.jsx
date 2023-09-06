@@ -4,6 +4,11 @@ import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
 import Trending_categories_items from "../categories/trending_categories_items";
 import Explore_collection_item from "../collectrions/explore_collection_item";
+import CategoryItem from "../categories/categoryItem";
+import TestItem from "../categories/testCategoriesItem";
+// import Bids from "../bids/bids";
+import NFTForSale from "../modal/onSellNFT";
+
 
 const User_items = () => {
   const [itemActive, setItemActive] = useState(1);
@@ -65,33 +70,14 @@ const User_items = () => {
 
             <TabPanel>
               <div>
-                {/* <!-- Filter --> */}
-                <Trending_categories_items />
+                <NFTForSale />
               </div>
             </TabPanel>
             <TabPanel>
               <div>
-                {/* <!-- Filter --> */}
-                <Trending_categories_items />
+                <TestItem />
               </div>
             </TabPanel>
-            {/* <TabPanel>
-              <div>
-                
-                <Trending_categories_items />
-              </div>
-            </TabPanel>
-            <TabPanel>
-              
-              <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-3 lg:grid-cols-4">
-                <Explore_collection_item itemFor="userPage" />
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div>
-                <Activity_item />
-              </div>
-            </TabPanel> */}
           </Tabs>
         </div>
       </section>

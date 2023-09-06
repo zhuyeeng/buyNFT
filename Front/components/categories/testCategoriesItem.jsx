@@ -7,16 +7,33 @@ import Likes from "../likes";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../redux/counterSlice";
+const { fetchCollectionNFTData } = require('../../data/nftDataFetcher');
 
-const CategoryItem = () => {
-  const { sortedtrendingCategoryItemData } = useSelector(
-    (state) => state.counter
-  );
+const testCategoriesItem = () => {
+  const [userNFTs, setUserNFTs] = useState([]);
+  const [localAddress, setLocalAddress] = useState('');
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+
+    fetchCollectionNFTData()
+      .then((data) => {
+        const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
+        setUserNFTs(filteredData);
+    })
+    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+
+  }, [localAddress]);
+
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-      {sortedtrendingCategoryItemData.map((item) => {
+      {userNFTs.map((item) => {
         const {
           id,
           image,
@@ -26,7 +43,7 @@ const CategoryItem = () => {
           creator,
           owner,
         } = item;
-
+        console.log(userNFTs);
         const itemLink = image
           .split("/")
           .slice(-1)
@@ -124,4 +141,4 @@ const CategoryItem = () => {
   );
 };
 
-export default CategoryItem;
+export default testCategoriesItem;

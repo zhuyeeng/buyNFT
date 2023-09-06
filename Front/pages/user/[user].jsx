@@ -36,7 +36,7 @@ const User = () => {
       setCopied(false);
     }, 2000);
   }, [copied]);
-  console.log('test');
+  // console.log('test');
 
   return (
     <>
