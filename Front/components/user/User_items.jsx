@@ -7,7 +7,7 @@ import Explore_collection_item from "../collectrions/explore_collection_item";
 import CategoryItem from "../categories/categoryItem";
 import TestItem from "../categories/testCategoriesItem";
 // import Bids from "../bids/bids";
-import NFTForSale from "../modal/onSellNFT";
+// import NFTForSale from "../modal/onSellNFT";
 
 
 const User_items = () => {
@@ -70,7 +70,8 @@ const User_items = () => {
 
             <TabPanel>
               <div>
-                <NFTForSale />
+                {/* <NFTForSale /> */}
+                <TestItem />
               </div>
             </TabPanel>
             <TabPanel>

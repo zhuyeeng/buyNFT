@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { bidsModalHide } from "../../redux/counterSlice";
-// import contractAbi from '../../data/abi/nftMintAbi.json';
-// import { nftContractAddress, providerURL } from '../../config/setting';
 import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
-import useNftBuySell from '../../components/nftBuySell/nftBuySell';
-// import txUpdateDisplay from '../../utils/txUpdateDisplay';
+import { nftContractAddress } from '../../config/setting';
+import nftBuySell from '../../data/abi/nftMintAbi.json';
 
 const BidsModal = () => {
   const { account, balance } = useWallet();
@@ -17,9 +15,7 @@ const BidsModal = () => {
   const dispatch = useDispatch();
 
   const pid = useSelector(state => state.counter.pid);
-
-  const nftBuySellHooks = useNftBuySell();
-  const { buy } = isWalletInitialized ? nftBuySellHooks : {};
+  const [contract, setContract] = useState(null);
   
   useEffect(() => {
     const storedBalance = localStorage.getItem('accountBalance');
@@ -27,37 +23,42 @@ const BidsModal = () => {
       setLocalBalance(storedBalance);
     }
 
-    if (account && balance) {
+    if (window.ethereum && account) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, signer);
+      setContract(nftContract);
       setIsWalletInitialized(true);
-      console.log("Wallet Initialized");
+    } else {
+      console.error('MetaMask extension not found or account not connected.');
     }
-  }, [account, balance]);
+  }, [account]);
 
-  const buyAction = async () => {
+  const buyNFT = async () => {
+    try {
+      const tokenId = pid.pid; // Replace with the selected token ID
+      const price = payAmount; // Replace with the selected price
+  
+      // Convert the price to Wei (if not already)
+      const priceInWei = ethers.utils.parseEther(price.toString());
+      console.log("priceInWei:", priceInWei.toString());
 
-    if (!buy) {
-      console.error("buy function is not initialized yet.");
-      return;
+      console.log("After: ", priceInWei);
+  
+      // Call the buyNFT function from your smart contract
+      const tx = await contract.buyNFT(tokenId, {
+        value: priceInWei,
+      });
+  
+      // Wait for the transaction to be confirmed
+      await tx.wait();
+  
+      // Transaction successful, you can update the UI or show a success message
+      console.log("NFT purchased successfully!");
+    } catch (error) {
+      console.error("Error buying NFT:", error);
     }
-    if (!payAmount) {
-      console.error("Parsed payAmount is undefined.");
-      return;
-    }
-    
-    try{
-      if(isWalletInitialized){
-        const parsedPayAmount = ethers.utils.parseUnits(payAmount);
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await nftBuySellHooks.buy(pid, payAmount);
-        console.log(typeof(payAmount));
-        console.log('success');
-      }else{
-        console.error('wallet not initialized.');
-      }
-    }catch(error){
-      console.error(error);
-    }
-  }
+  };
 
   return (
     <div>
@@ -66,7 +67,7 @@ const BidsModal = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="placeBidLabel">
-                Place a bid
+                Buy NFT
               </h5>
               <button
                 type="button"
@@ -150,7 +151,7 @@ const BidsModal = () => {
                 <button
                   type="button"
                   className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                  onClick={buyAction}
+                  onClick={buyNFT}
                 >
                   Buy
                 </button>

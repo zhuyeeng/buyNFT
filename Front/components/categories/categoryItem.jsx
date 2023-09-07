@@ -26,7 +26,7 @@ const CategoryItem = () => {
           creator,
           owner,
         } = item;
-
+        const uniqueKey = `item-${id}`;
         const itemLink = image
           .split("/")
           .slice(-1)
@@ -34,7 +34,7 @@ const CategoryItem = () => {
           .replace(".jpg", "")
           .replace(".gif", "");
         return (
-          <article key={id}>
+          <article key={uniqueKey}>
             <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2.5xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg">
               <figure className="relative">
                 <Link href={`/item/${id}`}>

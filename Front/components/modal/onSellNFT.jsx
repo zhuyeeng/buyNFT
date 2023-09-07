@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { testsModalHide } from "../../redux/counterSlice";
-// import contractAbi from '../../data/abi/nftMintAbi.json';
-// import { nftContractAddress, providerURL } from '../../config/setting';
 import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
 import useNftBuySell from '../nftBuySell/nftBuySell';
-// import txUpdateDisplay from '../../utils/txUpdateDisplay';
+import { nftContractAddress } from '../../config/setting';
+import nftBuySell from '../../data/abi/nftMintAbi.json';
+
 
 const TestsModal = () => {
   const { account, balance } = useWallet();
@@ -16,40 +16,58 @@ const TestsModal = () => {
   const dispatch = useDispatch();
 
   const pid = useSelector(state => state.counter.pid);
-
-  const nftBuySellHooks = useNftBuySell();
-  const { sellNFT } = isWalletInitialized ? nftBuySellHooks : {};
+  const [contract, setContract] = useState(null);
   
   useEffect(() => {
-    if (account && balance) {
+    if (window.ethereum && account) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, signer);
+      setContract(nftContract);
       setIsWalletInitialized(true);
-      console.log("Wallet Initialized");
+    } else {
+      console.error('MetaMask extension not found or account not connected.');
     }
-  }, [account, balance]);
+  }, [account]);
 
-  const sellAction = async () => {
-    if (!sellNFT) {
-      console.error("sell function is not initialized yet.");
-      return;
+  // const sellNFT = async () => {
+  //   try{
+  //     const tokenId = pid.pid;
+  //     const price = priceAmount;
+
+  //     console.log('pid: ', tokenId);
+  //     console.log("price: ", price);
+
+  //     const priceInWei = ethers.utils.parseEther(price.toString());
+  //     console.log("Price In Wei: ", priceInWei.toString());
+
+  //     console.log("After: ", priceInWei);
+
+  //     const sell = await contract.sellNFT(tokenId, {value: priceInWei,});
+
+  //     await sell.wait();
+
+  //     console.log("NFT Listed On Sale!");
+  //   }catch(error){
+  //     console.error("error buying NFT: ", error);
+  //   }
+  // };
+
+  const sellNFT = async () => {
+    try {
+      const tokenId = pid.pid; // Assuming pid.pid contains the token ID
+      const price = ethers.utils.parseEther(priceAmount.toString()); // Convert price to Wei
+  
+      // Call the sellNFT function without sending any Ether
+      const tx = await contract.sellNFT(tokenId, price);
+      const receipt = await tx.wait();
+  
+      // You can add additional logic or UI updates as needed
+      console.log("NFT Listed On Sale!");
+    } catch (error) {
+      console.error("Error listing NFT: ", error);
     }
-    if (!priceAmount) {
-      console.error("Parsed payAmount is undefined.");
-      return;
-    }
-    try{
-      if(isWalletInitialized){
-        // const parsedPayAmount = ethers.utils.parseUnits(payAmount);
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await nftBuySellHooks.sellNFT(pid, priceAmount);
-        console.log(typeof(payAmount));
-        console.log('success');
-      }else{
-        console.error('wallet not initialized.');
-      }
-    }catch(error){
-      console.error(error);
-    }
-  }
+  };
 
   return (
     <div>
@@ -142,7 +160,7 @@ const TestsModal = () => {
                 <button
                   type="button"
                   className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
-                  onClick={sellAction}
+                  onClick={sellNFT}
                 >
                   Sell
                 </button>
