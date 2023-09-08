@@ -160,6 +160,7 @@ function mapToFeatureCollectionsFormat(nftDataArray) {
       top: true,
       trending: true,
       recent: true,
+      price: item.nftPrice,
     }
   });
 }

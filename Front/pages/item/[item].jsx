@@ -276,46 +276,79 @@ const item = () => {
                     <div className="dark:bg-jacarta-700 dark:border-jacarta-600 border-jacarta-100 rounded-2lg border bg-white p-8">
                       <div className="mb-8 sm:flex sm:flex-wrap">
                         {/* <!-- Highest bid --> */}
-                        <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
-                          <div className="mt-3 flex">
-                            <figure className="mr-4 shrink-0">
-                              <Link href="#" className="relative block">
-                                <Image
-                                  width={48}
-                                  height={48}
-                                  src="/images/avatars/avatar_4.jpg"
-                                  alt="avatar"
-                                  className="rounded-2lg h-12 w-12"
-                                  loading="lazy"
-                                />
-                              </Link>
-                            </figure>
-                            <div>
-                              <div className="flex items-center whitespace-nowrap">
-                                <Tippy content={<span>ETH</span>}>
-                                  <span className="-ml-1">
-                                    <svg className="icon mr-1 h-4 w-4">
-                                      <use xlinkHref="/icons.svg#icon-ETH"></use>
-                                    </svg>
-                                  </span>
-                                </Tippy>
-                                {/* Using if statement */}
-                                {price !== null ? (
-                                  <span className="text-green text-lg font-medium leading-tight tracking-tight">
-                                    {`${price.substring(0,3)}..${price.slice(-4)}`} ETH
-                                  </span>
-                                ) : (
+                          {/* Using if statement */}
+                          {price !== null && ownerName.toLowerCase() == localAddress ? (
+                            <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
+                              <div className="mt-3 flex">
+                                <figure className="mr-4 shrink-0">
+                                  <Link href="#" className="relative block">
+                                    <Image
+                                      width={48}
+                                      height={48}
+                                      src="/images/avatars/avatar_4.jpg"
+                                      alt="avatar"
+                                      className="rounded-2lg h-12 w-12"
+                                      loading="lazy"
+                                    />
+                                  </Link>
+                                </figure>
+                                <div>
+                                  <div className="flex items-center whitespace-nowrap">
+                                    <Tippy content={<span>ETH</span>}>
+                                      <span className="-ml-1">
+                                        <svg className="icon mr-1 h-4 w-4">
+                                          <use xlinkHref="/icons.svg#icon-ETH"></use>
+                                        </svg>
+                                      </span>
+                                    </Tippy>
+                                    <span className="text-green text-lg font-medium leading-tight tracking-tight">
+                                      {price.length > 7 ? (
+                                        `${price.substring(0, 5)}..${price.slice(-2)} ETH`
+                                      ) : (
+                                        `${price} ETH`
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : null}
+                          {price === null && ownerName.toLowerCase() !== localAddress ? (
+                            <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
+                            <div className="mt-3 flex">
+                              <figure className="mr-4 shrink-0">
+                                <Link href="#" className="relative block">
+                                  <Image
+                                    width={48}
+                                    height={48}
+                                    src="/images/avatars/avatar_4.jpg"
+                                    alt="avatar"
+                                    className="rounded-2lg h-12 w-12"
+                                    loading="lazy"
+                                  />
+                                </Link>
+                              </figure>
+                              <div>
+                                <div className="flex items-center whitespace-nowrap">
+                                  <Tippy content={<span>ETH</span>}>
+                                    <span className="-ml-1">
+                                      <svg className="icon mr-1 h-4 w-4">
+                                        <use xlinkHref="/icons.svg#icon-ETH"></use>
+                                      </svg>
+                                    </span>
+                                  </Tippy>
                                   <span className="text-red text-lg font-medium leading-tight tracking-tight">
-                                    Not for Sale
+                                    Not For Sale
                                   </span>
-                                )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                          ): null}
                       </div>
 
                       {price !== null && ownerName.toLowerCase() !== localAddress ? (
+                        
                         <div>
                           {/* <!-- Countdown --> */}
                           <div className="dark:border-jacarta-600 sm:border-jacarta-100 mt-4 sm:mt-0 sm:w-1/2 pb-2">

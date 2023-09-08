@@ -60,9 +60,8 @@ const BidsCarousel = () => {
         className=" card-slider-4-columns !py-5"
       >
         {modifiedNFTData.map((item) => {
-          const { id, image, title, bid_number, price, ownerName } =
+          const { id, image, title, ListedTime, price, ownerName } =
             item;
-
           const itemLink = id;
 
           return (
@@ -100,29 +99,37 @@ const BidsCarousel = () => {
                       </Tippy>
                       {price !== null ? (
                         <span className="text-green text-sm font-medium tracking-tight">
-                        {`${price.substring(0,5)}..${price.slice(-2)}`} ETH
+                          {price.length > 7 ? (
+                            `${price.substring(0, 5)}..${price.slice(-2)} ETH`
+                          ) : (
+                            `${price} ETH`
+                          )}
                         </span>
-                      ):(
+                      ) : (
                         <span className="text-green text-sm font-medium tracking-tight">
                           Not For Sale
                         </span>
                       )}
                     </span>
                   </div>
-                  <div className="mt-2 text-sm">
-                    <span className="dark:text-jacarta-300 text-jacarta-500">
-                      Current Bid
-                    </span>
-                    <span className="dark:text-jacarta-100 text-jacarta-700">
-                      {bid_number} ETH
-                    </span>
-                  </div>
 
-                  {ownerName.toLowerCase() === localAddress ? (
+                  {ownerName.toLowerCase() === localAddress && price !== null ? (
+                    <div className="mt-8 flex items-center justify-between">
+                      {/* <h1>Owned</h1> */}
+                      <h1>{`${ListedTime}`}</h1>
+                    </div>
+                  ):null}
+                  {ownerName.toLowerCase() === localAddress && price === null ? (
                     <div className="mt-8 flex items-center justify-between">
                       <h1>Owned</h1>
                     </div>
-                  ):(
+                  ): null}
+                  {ownerName.toLowerCase() !== localAddress && price === null ? (
+                    <div className="mt-8 flex items-center justify-between">
+                      <h1>Not For Sale</h1>
+                    </div>
+                  ): null}
+                  {ownerName.toLowerCase() !== localAddress && price !== null ? (
                     <div className="mt-8 flex items-center justify-between">
                     <button
                       type="button"
@@ -132,7 +139,7 @@ const BidsCarousel = () => {
                       Buy
                     </button>
                     </div>
-                  )}
+                  ): null}
                 </div>
               </article>
             </SwiperSlide>

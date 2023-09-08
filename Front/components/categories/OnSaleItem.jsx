@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../redux/counterSlice";
 const { fetchCollectionNFTData } = require('../../data/nftDataFetcher');
 
-const testCategoriesItem = () => {
+const OnSaleNFT = () => {
   const [userNFTs, setUserNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
   const dispatch = useDispatch();
@@ -23,7 +23,9 @@ const testCategoriesItem = () => {
 
     fetchCollectionNFTData()
       .then((data) => {
-        const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
+        const filteredData = data
+          .filter((item) => item.ownerName.toLowerCase() === localAddress)
+          .filter((item) => item.price !== null);
         setUserNFTs(filteredData);
     })
     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
@@ -101,7 +103,7 @@ const testCategoriesItem = () => {
                 </Link>
 
                 {/* auction dropdown  */}
-                {/* <Auctions_dropdown classes="dark:hover:bg-jacarta-600 dropup hover:bg-jacarta-100 rounded-full " /> */}
+                <Auctions_dropdown classes="dark:hover:bg-jacarta-600 dropup hover:bg-jacarta-100 rounded-full " />
               </div>
               <div className="mt-2 text-sm">
                 {price !== null ?(
@@ -115,7 +117,7 @@ const testCategoriesItem = () => {
               </div>
 
               <div className="mt-8 flex items-center justify-between">
-                {/* <button
+                <button
                   className="text-accent font-display text-sm font-semibold"
                   onClick={() => dispatch(buyModalShow())}
                 >
@@ -131,7 +133,7 @@ const testCategoriesItem = () => {
                   <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
                     View History
                   </span>
-                </Link> */}
+                </Link>
               </div>
             </div>
           </article>
@@ -141,4 +143,4 @@ const testCategoriesItem = () => {
   );
 };
 
-export default testCategoriesItem;
+export default OnSaleNFT;
