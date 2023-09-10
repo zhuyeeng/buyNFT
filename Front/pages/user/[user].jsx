@@ -60,19 +60,19 @@ const User = () => {
               <section className="dark:bg-jacarta-800 bg-light-base relative pb-12 pt-28">
                 {/* <!-- Avatar --> */}
                 <div className="absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-                  {/* <figure className="relative h-40 w-40 dark:border-jacarta-600 rounded-xl border-[5px] border-white">
+                  <figure className="relative h-40 w-40 dark:border-jacarta-600 rounded-xl border-[5px] border-white">
                     <Image
                       width={141}
                       height={141}
-                      src={image}
-                      alt={title}
+                      src="/images/avatar/avatar_1.jpg"
+                      // alt="profileImage"
                       className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-contain"
                     />
                     <div
                       className="dark:border-jacarta-600 bg-green absolute -right-3 bottom-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
                       data-tippy-content="Verified Collection"
                     >
-                      {icon && (
+                      {/* {icon && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -83,9 +83,9 @@ const User = () => {
                           <path fill="none" d="M0 0h24v24H0z"></path>
                           <path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
                         </svg>
-                      )}
+                      )} */}
                     </div>
-                  </figure> */}
+                  </figure>
                 </div>
 
                 <div className="container">

@@ -31,7 +31,7 @@ const OnSaleNFT = () => {
     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
 
   }, [localAddress]);
-
+  console.log(userNFTs);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
@@ -45,7 +45,7 @@ const OnSaleNFT = () => {
           creator,
           owner,
         } = item;
-        console.log(userNFTs);
+        // console.log(userNFTs);
         const itemLink = image
           .split("/")
           .slice(-1)

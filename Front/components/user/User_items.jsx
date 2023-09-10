@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
-import Trending_categories_items from "../categories/trending_categories_items";
+import OnSaleItem from "../categories/OnSaleItem";
 import Explore_collection_item from "../collectrions/explore_collection_item";
 import CategoryItem from "../categories/categoryItem";
 import TestItem from "../categories/testCategoriesItem";
-import OnSaleItem from "../categories/OnSaleItem";
-
 
 const User_items = () => {
   const [itemActive, setItemActive] = useState(1);
@@ -69,7 +67,7 @@ const User_items = () => {
 
             <TabPanel>
               <div>
-                <Trending_categories_items />
+                <OnSaleItem />
               </div>
             </TabPanel>
             <TabPanel>
