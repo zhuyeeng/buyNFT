@@ -91,29 +91,38 @@ const CategoryItem = () => {
                   <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
                   {`${price.substring(0,5)}..${price.slice(-4)}`}
                   </span>
-                ):null}
-                {/* <span className="dark:text-jacarta-300 text-jacarta-500">
-                  {bidCount}/{bidLimit}
-                </span> */}
+                ):(
+                  <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
+                    Not For Sale
+                  </span>
+                )}
               </div>
 
               <div className="mt-8 flex items-center justify-between">
+                {/* <button
+                  className="text-accent font-display text-sm font-semibold"
+                  onClick={() => dispatch(buyModalShow())}
+                >
+                  Buy now
+                </button> */}
+                { price !== null ? (
                 <button
                   className="text-accent font-display text-sm font-semibold"
                   onClick={() => dispatch(buyModalShow())}
                 >
                   Buy now
                 </button>
+                ): null}
                 <Link
                   href={`/item/${itemLink}`}
                   className="group flex items-center"
                 >
-                  <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
+                  {/* <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
                     <use xlinkHref="/icons.svg#icon-history"></use>
                   </svg>
                   <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
                     View History
-                  </span>
+                  </span> */}
                 </Link>
               </div>
             </div>

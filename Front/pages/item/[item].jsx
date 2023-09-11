@@ -277,7 +277,7 @@ const item = () => {
                       <div className="mb-8 sm:flex sm:flex-wrap">
                         {/* <!-- Highest bid --> */}
                           {/* Using if statement */}
-                          {price !== null && ownerName.toLowerCase() == localAddress ? (
+                          {price !== null && ownerName.toLowerCase() !== localAddress ? (
                             <div className="sm:w-1/2 sm:pr-4 lg:pr-8">
                               <div className="mt-3 flex">
                                 <figure className="mr-4 shrink-0">

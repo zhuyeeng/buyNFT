@@ -207,9 +207,6 @@ async function fetchCarouselNFTData() {
 async function fetchCollectionNFTData() {
   try {
     const nftContract = new ethers.Contract(nftContractAddress, contractAbi, provider);
-    nftContract.on("NFTListedForSale", (seller, tokenId, price, timestamp) => {
-      console.log(`NFT listed for sale: tokenId ${tokenId} by ${seller} at ${new Date(timestamp * 1000)}. Price: ${price}`);
-    });
     const nftDataWithUriData = await getNFTDataFromIPFS();
     const modifiedNftDatas = mapDataToCollectionFormat(nftDataWithUriData);
     return modifiedNftDatas;

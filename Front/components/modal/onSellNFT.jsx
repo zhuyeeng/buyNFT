@@ -30,29 +30,6 @@ const TestsModal = () => {
     }
   }, [account]);
 
-  // const sellNFT = async () => {
-  //   try{
-  //     const tokenId = pid.pid;
-  //     const price = priceAmount;
-
-  //     console.log('pid: ', tokenId);
-  //     console.log("price: ", price);
-
-  //     const priceInWei = ethers.utils.parseEther(price.toString());
-  //     console.log("Price In Wei: ", priceInWei.toString());
-
-  //     console.log("After: ", priceInWei);
-
-  //     const sell = await contract.sellNFT(tokenId, {value: priceInWei,});
-
-  //     await sell.wait();
-
-  //     console.log("NFT Listed On Sale!");
-  //   }catch(error){
-  //     console.error("error buying NFT: ", error);
-  //   }
-  // };
-
   const sellNFT = async () => {
     try {
       const tokenId = pid.pid; // Assuming pid.pid contains the token ID

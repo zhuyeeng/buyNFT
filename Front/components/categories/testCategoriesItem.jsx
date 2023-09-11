@@ -15,12 +15,6 @@ const testCategoriesItem = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
-
     fetchCollectionNFTData()
       .then((data) => {
         const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
@@ -28,7 +22,15 @@ const testCategoriesItem = () => {
     })
     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
 
-  }, [localAddress]);
+  });
+
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+  },[localAddress]);
 
 
   return (
@@ -108,7 +110,11 @@ const testCategoriesItem = () => {
                   <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
                   {`${price.substring(0,5)}..${price.slice(-4)}`}
                   </span>
-                ):null}
+                ):(
+                  <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
+                    Not For Sale Yet
+                  </span>
+                )}
                 {/* <span className="dark:text-jacarta-300 text-jacarta-500">
                   {bidCount}/{bidLimit}
                 </span> */}

@@ -61,11 +61,11 @@ const User = () => {
                 {/* <!-- Avatar --> */}
                 <div className="absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
                   <figure className="relative h-40 w-40 dark:border-jacarta-600 rounded-xl border-[5px] border-white">
-                    <Image
+                  <Image
                       width={141}
                       height={141}
-                      src="/images/avatar/avatar_1.jpg"
-                      // alt="profileImage"
+                      src ="/images/avatars/default.jpg"
+                      alt="Deafult Profile Image"
                       className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-contain"
                     />
                     <div

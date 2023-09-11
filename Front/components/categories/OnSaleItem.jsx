@@ -15,23 +15,25 @@ const OnSaleNFT = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
-
     fetchCollectionNFTData()
       .then((data) => {
         const filteredData = data
           .filter((item) => item.ownerName.toLowerCase() === localAddress)
           .filter((item) => item.price !== null);
         setUserNFTs(filteredData);
+
     })
     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
 
-  }, [localAddress]);
-  console.log(userNFTs);
+  });
+
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+  },[localAddress]);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
