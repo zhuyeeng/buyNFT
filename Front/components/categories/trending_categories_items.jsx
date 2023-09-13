@@ -57,7 +57,7 @@ const Trending_categories_items = () => {
         setItemdata(filterdData);
       })
       .catch((error) => console.error('Error fetching and proicessing NFT data: ', error.message));
-    // dispatch(updateTrendingCategoryItemData(itemdata.slice(0, 8)));
+    dispatch(updateTrendingCategoryItemData(itemdata.slice(0, 8)));
   }, [dispatch]);
 
   return (

@@ -12,7 +12,14 @@ const { fetchCollectionNFTData } = require('../../data/nftDataFetcher');
 const OnSaleNFT = () => {
   const [userNFTs, setUserNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
-  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+  },[localAddress]);
 
   useEffect(() => {
     fetchCollectionNFTData()
@@ -21,18 +28,9 @@ const OnSaleNFT = () => {
           .filter((item) => item.ownerName.toLowerCase() === localAddress)
           .filter((item) => item.price !== null);
         setUserNFTs(filteredData);
-
+        console.log(filteredData);
     })
     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-
-  });
-
-  useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
   },[localAddress]);
 
   return (

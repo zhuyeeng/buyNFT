@@ -194,6 +194,26 @@ function categoriesData(nftDataArray){
   });
 }
 
+function mapDataForProfile(nftDataArray) {
+  return nftDataArray.map((item, index) => {
+    return {
+      ownerName: item.ownerName,
+      image: item.uriData.image,
+      id: index,
+      price: item.nftPrice,
+      likes: 188, // you may need to adjust or derive this
+      creator: {
+        name: `hello`, // you may need to adjust or derive this
+        image: item.uriData.image, // adjust as needed
+      },
+      owner: {
+        name: `test`, // you may need to adjust or derive this
+        image: item.uriData.image, // adjust as needed
+      },
+    };
+  });
+}
+
 async function fetchCarouselNFTData() {
   try {
     const nftDataWithUriData = await getNFTDataFromIPFS();
@@ -235,4 +255,15 @@ async function fetchCategoriesNFTData(){
   }
 }
 
-export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData, fetchCategoriesNFTData };
+async function fetchProfileNFTData() {
+  try {
+    const nftContract = new ethers.Contract(nftContractAddress, contractAbi, provider);
+    const nftDataWithUriData = await getNFTDataFromIPFS();
+    const modifiedNftDatas = mapDataForProfile(nftDataWithUriData);
+    return modifiedNftDatas;
+  } catch (error) {
+    console.error('Error fetching NFT data:', error.message);
+  }
+}
+
+export { fetchCarouselNFTData, fetchCollectionNFTData ,fetchExploreCollectionNFTData, fetchCategoriesNFTData, fetchProfileNFTData };
