@@ -23,18 +23,29 @@ const testCategoriesItem = () => {
   }, [localAddress]);
   
   useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+  
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+  }, [localAddress]);
+  
+  useEffect(() => {
     fetchProfileNFTData()
       .then((data) => {
+        console.log("Fetched data:", data);
         const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
         console.log("Filtered data:", filteredData);
-        if(filteredData !== null){
-          setUserNFTs(filteredData);
-        }else{
-          console.log("Fail To Grab The Data.");
-        }
+        setUserNFTs(filteredData);
+        console.log("User NFTs:", userNFTs); // Check if userNFTs is updated
       })
       .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
   }, [localAddress]);
+  
+  console.log("localAddress:", localAddress); // Check the value of localAddress
+  
+  console.log("Final userNFTs:", userNFTs); // Check the final value of userNFTs
+  
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { buyModalHide } from "../../redux/counterSlice";
 import { Confirm_checkout } from "../metamask/Metamask";
@@ -8,38 +8,6 @@ import Image from "next/image";
 const BuyModal = () => {
   const { buyModal } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
-  const [ethAmount, setEthAmount] = useState("");
-  const [ethToUsdRate, setEthToUsdRate] = useState(null);
-  const [convertedAmount, setConvertedAmount] = useState(null);
-
-  useEffect(() => {
-    // Fetch current ETH to USD rate from CoinGecko API when the component mounts
-    async function fetchEthToUsdRate() {
-      try {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        );
-        const data = await response.json();
-
-        if (data.ethereum && data.ethereum.usd) {
-          setEthToUsdRate(data.ethereum.usd);
-        } else {
-          console.error("Unable to fetch exchange rate data.");
-        }
-      } catch (error) {
-        console.error("An error occurred while fetching exchange rate data.");
-      }
-    }
-
-    fetchEthToUsdRate();
-  }, []);
-
-  const convertETHtoUSD = () => {
-    if (ethAmount !== "" && ethToUsdRate) {
-      const converted = parseFloat(ethAmount) * ethToUsdRate;
-      setConvertedAmount(converted.toFixed(2));
-    }
-  };
 
   return (
     <div>
@@ -126,15 +94,14 @@ const BuyModal = () => {
                       </svg>
                     </span>
                     <span className="dark:text-jacarta-100 text-sm font-medium tracking-tight">
-                      {ethAmount} ETH
+                      1.55 ETH
                     </span>
                   </span>
                   <div className="dark:text-jacarta-300 text-right text-sm">
-                    {convertedAmount !== null ? `$${convertedAmount}` : ""}
+                    $130.82
                   </div>
                 </div>
               </div>
-            </div>
 
               {/* <!-- Total --> */}
               <div className="dark:border-jacarta-600 border-jacarta-100 mb-2 flex items-center justify-between border-b py-2.5">
@@ -186,6 +153,7 @@ const BuyModal = () => {
           </div>
         </div>
       </div>
+    </div>
   );
 };
 

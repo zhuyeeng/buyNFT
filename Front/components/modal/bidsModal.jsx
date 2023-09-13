@@ -10,12 +10,13 @@ const BidsModal = () => {
   const { account, balance } = useWallet();
   const [localBalance, setLocalBalance] = useState('');
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
-  const [payAmount, setPayAmount] = useState("");
   const { bidsModal } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
-
   const pid = useSelector(state => state.counter.pid);
+  const [payAmount, setPayAmount] = useState("");
+  // const [originalPrice, setOriginalPrice] = useState("");
   const [contract, setContract] = useState(null);
+  const [ethToUsdRate, setEthToUsdRate] = useState(0);
   
   useEffect(() => {
     const storedBalance = localStorage.getItem('accountBalance');
@@ -33,6 +34,29 @@ const BidsModal = () => {
       console.error('MetaMask extension not found or account not connected.');
     }
   }, [account]);
+
+  useEffect(() => {
+    setPayAmount(pid?.price.toString());
+    async function fetchEthToUsdRate() {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        );
+        const data = await response.json();
+  
+        if (data.ethereum && data.ethereum.usd) {
+          setEthToUsdRate(data.ethereum.usd);
+        } else {
+          console.error("Unable to fetch exchange rate data.");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching exchange rate data.");
+      }
+    }
+  
+    // Call the fetchEthToUsdRate function to fetch and update the exchange rate.
+    fetchEthToUsdRate();
+  }, [pid])
 
   const buyNFT = async () => {
     try {
@@ -116,8 +140,10 @@ const BidsModal = () => {
                 />
 
                 <div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">
-                  <span className="self-center px-2 text-sm">$130.82</span>
-                </div>
+                    <span className="self-center px-2 text-sm">
+                      ${(payAmount * ethToUsdRate).toFixed(2)}
+                    </span>
+                  </div>
               </div>
 
               <div className="text-right">
@@ -127,7 +153,7 @@ const BidsModal = () => {
               </div>
 
               {/* <!-- Terms --> */}
-              <div className="mt-4 flex items-center space-x-2">
+              {/* <div className="mt-4 flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id="terms"
@@ -142,7 +168,7 @@ const BidsModal = () => {
                     Terms of Service
                   </a>
                 </label>
-              </div>
+              </div> */}
             </div>
             {/* <!-- end body --> */}
 

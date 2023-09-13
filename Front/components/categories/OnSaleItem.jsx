@@ -7,7 +7,7 @@ import Likes from "../likes";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../redux/counterSlice";
-const { fetchCollectionNFTData } = require('../../data/nftDataFetcher');
+const { fetchProfileNFTData } = require('../../data/nftDataFetcher');
 
 const OnSaleNFT = () => {
   const [userNFTs, setUserNFTs] = useState([]);
@@ -22,16 +22,18 @@ const OnSaleNFT = () => {
   },[localAddress]);
 
   useEffect(() => {
-    fetchCollectionNFTData()
+    fetchProfileNFTData()
       .then((data) => {
+        console.log("Fetched data:", data);
         const filteredData = data
-          .filter((item) => item.ownerName.toLowerCase() === localAddress)
-          .filter((item) => item.price !== null);
+        .filter((item) => item.ownerName.toLowerCase() === localAddress)
+        .filter((item) => item.price !== null);
+        console.log("Filtered data:", filteredData);
         setUserNFTs(filteredData);
-        console.log(filteredData);
-    })
-    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-  },[localAddress]);
+        console.log("User NFTs:", userNFTs); // Check if userNFTs is updated
+      })
+      .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  }, [localAddress]);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
