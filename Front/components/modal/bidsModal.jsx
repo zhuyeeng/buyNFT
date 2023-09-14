@@ -1,3 +1,4 @@
+// components/modal/bidsModal.jsx
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { bidsModalHide } from "../../redux/counterSlice";
@@ -7,82 +8,64 @@ import { nftContractAddress } from '../../config/setting';
 import nftBuySell from '../../data/abi/nftMintAbi.json';
 
 const BidsModal = () => {
-  const { account, balance } = useWallet();
-  const [localBalance, setLocalBalance] = useState('');
-  const [isWalletInitialized, setIsWalletInitialized] = useState(false);
-  const { bidsModal } = useSelector((state) => state.counter);
+  const { account } = useWallet();
+  const { bidsModal, pid } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
-  const pid = useSelector(state => state.counter.pid);
+
+  const [localBalance, setLocalBalance] = useState('');
   const [payAmount, setPayAmount] = useState("");
   const [contract, setContract] = useState(null);
   const [ethToUsdRate, setEthToUsdRate] = useState(0);
+  console.log("Bid Modal Running....");
   
   useEffect(() => {
-    const storedBalance = localStorage.getItem('accountBalance');
-    if (storedBalance) {
-      setLocalBalance(storedBalance);
-    }
-
-    if(pid?.price !== null){
-      const oriPrice = pid?.price;
-      setPayAmount(oriPrice);
-    }
+    console.log("Bid Modal UseEffect#1 running....");
+    setLocalBalance(localStorage.getItem('accountBalance') || '');
+    setPayAmount(pid?.price || '');
 
     if (window.ethereum && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, signer);
+      const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, provider.getSigner());
       setContract(nftContract);
-      setIsWalletInitialized(true);
     } else {
-      console.error('MetaMask extension not found or account not connected.');
+      console.error('BidsModal MetaMask extension not found or account not connected.');
     }
-  }, [account,pid]);
+  }, [account, pid]);
 
   useEffect(() => {
-    
+    console.log("Bid Modal UseEffect#2 running....");
     async function fetchEthToUsdRate() {
       try {
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        );
+        const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
         const data = await response.json();
-  
-        if (data.ethereum && data.ethereum.usd) {
+
+        if (data.ethereum?.usd) {
           setEthToUsdRate(data.ethereum.usd);
         } else {
           console.error("Unable to fetch exchange rate data.");
         }
       } catch (error) {
-        console.error("An error occurred while fetching exchange rate data.");
+        console.error("Error fetching exchange rate data:", error);
       }
     }
   
-    // Call the fetchEthToUsdRate function to fetch and update the exchange rate.
     fetchEthToUsdRate();
-  }, [])
+  }, []);
 
   const buyNFT = async () => {
-    try {
-      const tokenId = pid.pid; // Replace with the selected token ID
-      const price = payAmount; // Replace with the selected price
-  
-      // Convert the price to Wei (if not already)
-      const priceInWei = ethers.utils.parseEther(price.toString());
-      console.log("priceInWei:", priceInWei.toString());
+    if(!contract || !payAmount || !pid) return;
 
-      console.log("After: ", priceInWei);
-  
-      // Call the buyNFT function from your smart contract
+    try {
+      const tokenId = pid.pid;
+      const priceInWei = ethers.utils.parseEther(payAmount.toString());
+
       const tx = await contract.buyNFT(tokenId, {
         value: priceInWei,
       });
-  
-      // Wait for the transaction to be confirmed
+
       await tx.wait();
-  
-      // Transaction successful, you can update the UI or show a success message
       console.log("NFT purchased successfully!");
+      dispatch(bidsModalHide());
     } catch (error) {
       console.error("Error buying NFT:", error);
     }
@@ -152,12 +135,12 @@ const BidsModal = () => {
 
               <div className="text-right">
                 <span className="dark:text-jacarta-400 text-sm">
-                  Balance: {`${localBalance}`} WETH
+                  Balance: {`${localBalance}`} ETH
                 </span>
               </div>
 
               {/* <!-- Terms --> */}
-              {/* <div className="mt-4 flex items-center space-x-2">
+              { <div className="mt-4 flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id="terms"
@@ -167,12 +150,12 @@ const BidsModal = () => {
                   htmlFor="terms"
                   className="dark:text-jacarta-200 text-sm"
                 >
-                  By checking this box, I agree to {"Xhibiter's"}{" "}
+                  By checking this box, I agree to {"LIVE DEMO's"}{" "}
                   <a href="#" className="text-accent">
                     Terms of Service
                   </a>
                 </label>
-              </div> */}
+              </div> }
             </div>
             {/* <!-- end body --> */}
 

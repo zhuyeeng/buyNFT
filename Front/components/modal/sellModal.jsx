@@ -1,25 +1,35 @@
-import React, { useEffect, useState } from "react";
+// components/modal/sellModal.jsx
+import React, { useEffect, useState,useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { sellModalHide } from "../../redux/counterSlice";
 import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
-import useNftBuySell from '../nftBuySell/nftBuySell';
 import { nftContractAddress } from '../../config/setting';
 import nftBuySell from '../../data/abi/nftMintAbi.json';
 
 
 const SellModal = () => {
-  const { account, balance } = useWallet();
-  const [isWalletInitialized, setIsWalletInitialized] = useState(false);
-  const [priceAmount, setPriceAmount] = useState("");
-  const { sellModal } = useSelector((state) => state.counter);
+  console.log("Sell Modal Running....");
+  const mountRef = useRef(true);
+  const { account } = useWallet();
   const dispatch = useDispatch();
+  const { sellModal, pid } = useSelector((state) => state.counter);
+
+  const [isWalletInitialized, setIsWalletInitialized] = useState(false);
+  const [contract, setContract] = useState(null);
+  const [priceAmount, setPriceAmount] = useState("");
   const [ethToUsdRate, setEthToUsdRate] = useState(0);
 
-  const pid = useSelector(state => state.counter.pid);
-  const [contract, setContract] = useState(null);
+  if(mountRef.current) {
+    console.log("Sell Modal Mounted....");
+    mountRef.current = false;
+  } else {
+    console.log("Sell Modal Updated....");
+  }
+
   
   useEffect(() => {
+    console.log("Sell Modal UseEffect#1 running....");
     if (window.ethereum && account) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -27,19 +37,19 @@ const SellModal = () => {
       setContract(nftContract);
       setIsWalletInitialized(true);
     } else {
-      console.error('MetaMask extension not found or account not connected.');
+      console.error('SellModal MetaMask extension not found or account not connected.');
     }
   }, [account]);
 
   useEffect(() => {
     async function fetchEthToUsdRate() {
+      console.log("Sell Modal UseEffect#2 running....");
       try {
         const response = await fetch(
           "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
         );
         const data = await response.json();
-  
-        if (data.ethereum && data.ethereum.usd) {
+        if (data.ethereum?.usd) {
           setEthToUsdRate(data.ethereum.usd);
         } else {
           console.error("Unable to fetch exchange rate data.");
@@ -47,22 +57,17 @@ const SellModal = () => {
       } catch (error) {
         console.error("An error occurred while fetching exchange rate data.");
       }
-    }
-  
-    // Call the fetchEthToUsdRate function to fetch and update the exchange rate.
+    };
     fetchEthToUsdRate();
-  },[])
+  }, []);
 
   const sellNFT = async () => {
+    if (!contract) return;
     try {
-      const tokenId = pid.pid; // Assuming pid.pid contains the token ID
-      const price = ethers.utils.parseEther(priceAmount.toString()); // Convert price to Wei
-  
-      // Call the sellNFT function without sending any Ether
+      const tokenId = pid.pid;
+      const price = ethers.utils.parseEther(priceAmount.toString());
       const tx = await contract.sellNFT(tokenId, price);
-      const receipt = await tx.wait();
-  
-      // You can add additional logic or UI updates as needed
+      await tx.wait();
       console.log("NFT Listed On Sale!");
     } catch (error) {
       console.error("Error listing NFT: ", error);

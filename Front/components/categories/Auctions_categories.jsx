@@ -5,7 +5,7 @@ import Tippy from "@tippyjs/react";
 import Countdown_timer from "../Countdown_timer";
 import Auctions_dropdown from "../dropdown/Auctions_dropdown";
 import Link from "next/link";
-import { bidsModalShow } from "../../redux/counterSlice";
+import { bidsModalShow ,buyModalShow} from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import "tippy.js/themes/light.css";
 import Image from "next/image";
@@ -136,7 +136,7 @@ const Auctions_categories = () => {
                     <div className="mt-8 flex items-center justify-between">
                       <button
                         className="text-accent font-display text-sm font-semibold"
-                        onClick={() => dispatch(bidsModalShow())}
+                        onClick={() => dispatch(buyModalShow())}
                       >
                         Place bid
                       </button>

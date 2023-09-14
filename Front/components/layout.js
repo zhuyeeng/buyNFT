@@ -1,7 +1,9 @@
+// components/layout.js
+import { useSelector } from 'react-redux';
 import Footer from "./footer";
 import Wallet_modal from "./modal/wallet_modal";
 import BidsModal from "./modal/bidsModal";
-import SellModal from "./modal/onSellNFT";
+import SellModal from "./modal/sellModal";
 import BuyModal from "./modal/buyModal";
 import { useRouter } from "next/router";
 import Header01 from "./header/Header01";
@@ -11,6 +13,10 @@ import Header04 from "./header/Header04";
 
 export default function Layout({ children }) {
   const route = useRouter();
+  console.log("layout render...");
+  const sellModal = useSelector((state) => state.counter.sellModal);
+  const bidsModal = useSelector((state) => state.counter.bidsModal);
+
   // header start
   let header;
   if (
@@ -33,8 +39,8 @@ export default function Layout({ children }) {
     <>
       {header}
       <Wallet_modal />
-      <SellModal />
-      <BidsModal />
+      {sellModal && <SellModal />}
+      {bidsModal && <BidsModal />}
       <BuyModal />
       <main>{children}</main>
       <Footer />

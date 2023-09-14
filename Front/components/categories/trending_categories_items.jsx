@@ -52,7 +52,6 @@ const Trending_categories_items = () => {
 
     fetchCategoriesNFTData()
       .then((data) => {
-        console.log(data);
         const filterdData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
         setItemdata(filterdData);
       })
