@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { testsModalHide } from "../../redux/counterSlice";
+import { sellModalHide } from "../../redux/counterSlice";
 import { ethers } from 'ethers';
 import { useWallet } from "../../context/walletContext";
 import useNftBuySell from '../nftBuySell/nftBuySell';
@@ -8,12 +8,13 @@ import { nftContractAddress } from '../../config/setting';
 import nftBuySell from '../../data/abi/nftMintAbi.json';
 
 
-const TestsModal = () => {
+const SellModal = () => {
   const { account, balance } = useWallet();
   const [isWalletInitialized, setIsWalletInitialized] = useState(false);
   const [priceAmount, setPriceAmount] = useState("");
-  const { testsModal } = useSelector((state) => state.counter);
+  const { sellModal } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
+  const [ethToUsdRate, setEthToUsdRate] = useState(0);
 
   const pid = useSelector(state => state.counter.pid);
   const [contract, setContract] = useState(null);
@@ -29,6 +30,28 @@ const TestsModal = () => {
       console.error('MetaMask extension not found or account not connected.');
     }
   }, [account]);
+
+  useEffect(() => {
+    async function fetchEthToUsdRate() {
+      try {
+        const response = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+        );
+        const data = await response.json();
+  
+        if (data.ethereum && data.ethereum.usd) {
+          setEthToUsdRate(data.ethereum.usd);
+        } else {
+          console.error("Unable to fetch exchange rate data.");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching exchange rate data.");
+      }
+    }
+  
+    // Call the fetchEthToUsdRate function to fetch and update the exchange rate.
+    fetchEthToUsdRate();
+  },[])
 
   const sellNFT = async () => {
     try {
@@ -48,7 +71,7 @@ const TestsModal = () => {
 
   return (
     <div>
-      <div className={testsModal ? "modal fade show block" : "modal fade"}>
+      <div className={sellModal ? "modal fade show block" : "modal fade"}>
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content">
             <div className="modal-header">
@@ -58,7 +81,7 @@ const TestsModal = () => {
               <button
                 type="button"
                 className="btn-close"
-                onClick={() => dispatch(testsModalHide())}
+                onClick={() => dispatch(sellModalHide())}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +125,9 @@ const TestsModal = () => {
                 />
 
                 <div className="bg-jacarta-50 border-jacarta-100 flex flex-1 justify-end self-stretch border-l dark:text-jacarta-700">
-                  <span className="self-center px-2 text-sm">$130.82</span>
+                  <span className="self-center px-2 text-sm">
+                    ${(priceAmount * ethToUsdRate).toFixed(2)}
+                  </span>
                 </div>
               </div>
 
@@ -112,23 +137,6 @@ const TestsModal = () => {
                 </span>
               </div> */}
 
-              {/* <!-- Terms --> */}
-              <div className="mt-4 flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  className="checked:bg-accent dark:bg-jacarta-600 text-accent border-jacarta-200 focus:ring-accent/20 dark:border-jacarta-500 h-5 w-5 self-start rounded focus:ring-offset-0"
-                />
-                <label
-                  htmlFor="terms"
-                  className="dark:text-jacarta-200 text-sm"
-                >
-                  By checking this box, I agree to {"Xhibiter's"}{" "}
-                  <a href="#" className="text-accent">
-                    Terms of Service
-                  </a>
-                </label>
-              </div>
             </div>
             {/* <!-- end body --> */}
 
@@ -150,4 +158,4 @@ const TestsModal = () => {
   );
 };
 
-export default TestsModal;
+export default SellModal;

@@ -14,7 +14,6 @@ const BidsModal = () => {
   const dispatch = useDispatch();
   const pid = useSelector(state => state.counter.pid);
   const [payAmount, setPayAmount] = useState("");
-  // const [originalPrice, setOriginalPrice] = useState("");
   const [contract, setContract] = useState(null);
   const [ethToUsdRate, setEthToUsdRate] = useState(0);
   
@@ -22,6 +21,11 @@ const BidsModal = () => {
     const storedBalance = localStorage.getItem('accountBalance');
     if (storedBalance) {
       setLocalBalance(storedBalance);
+    }
+
+    if(pid?.price !== null){
+      const oriPrice = pid?.price;
+      setPayAmount(oriPrice);
     }
 
     if (window.ethereum && account) {
@@ -33,10 +37,10 @@ const BidsModal = () => {
     } else {
       console.error('MetaMask extension not found or account not connected.');
     }
-  }, [account]);
+  }, [account,pid]);
 
   useEffect(() => {
-    setPayAmount(pid?.price.toString());
+    
     async function fetchEthToUsdRate() {
       try {
         const response = await fetch(
@@ -56,7 +60,7 @@ const BidsModal = () => {
   
     // Call the fetchEthToUsdRate function to fetch and update the exchange rate.
     fetchEthToUsdRate();
-  }, [pid])
+  }, [])
 
   const buyNFT = async () => {
     try {

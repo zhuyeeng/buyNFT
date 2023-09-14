@@ -11,7 +11,7 @@ const initialState = {
   renkingData: [],
   filteredRenkingData: [],
   walletModal: false,
-  testsModal: false,
+  sellModal: false,
   bidsModal: false,
   buyModal: false,
   propartiesModalValue: false,
@@ -45,12 +45,12 @@ export const counterSlice = createSlice({
     walletModalhide: (state) => {
       state.walletModal = false;
     },
-    testsModalShow: (state, action) => {
-      state.testsModal = true;
+    sellModalShow: (state, action) => {
+      state.sellModal = true;
       state.pid = { pid: action.payload.pid }; // This sets the pid property only
     },
-    testsModalHide: (state) => {
-      state.testsModal = false;
+    sellModalHide: (state) => {
+      state.sellModal = false;
     },
     bidsModalShow: (state, action) => {
       state.bidsModal = true;
@@ -182,8 +182,8 @@ export const {
   closeDropdown,
   walletModalShow,
   walletModalhide,
-  testsModalShow,
-  testsModalHide,
+  sellModalShow,
+  sellModalHide,
   bidsModalShow,
   bidsModalHide,
   buyModalShow,

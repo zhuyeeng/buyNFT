@@ -13,38 +13,38 @@ const testCategoriesItem = () => {
   const [userNFTs, setUserNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
   const dispatch = useDispatch();
+  
+  useEffect(() => {
+    const storedAddress = localStorage.getItem('defaultAccount');
+  
+    if (storedAddress) {
+      setLocalAddress(storedAddress);
+    }
+  });
+  
+  // useEffect(() => {
+  //   fetchProfileNFTData()
+  //     .then((data) => {
+  //       console.log("Fetched data:", data);
+  //       const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
+  //       console.log("Filtered data:", filteredData);
+  //       setUserNFTs(filteredData);
+  //       console.log("User NFTs:", userNFTs); // Check if userNFTs is updated
+  //     })
+  //     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  // }, [localAddress]);
 
-  useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-  
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
-  }, [localAddress]);
-  
-  useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-  
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
-  }, [localAddress]);
-  
   useEffect(() => {
     fetchProfileNFTData()
       .then((data) => {
-        console.log("Fetched data:", data);
-        const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
-        console.log("Filtered data:", filteredData);
+        const filteredData = data
+          .filter((item) => item.ownerName.toLowerCase() === localAddress)
         setUserNFTs(filteredData);
-        console.log("User NFTs:", userNFTs); // Check if userNFTs is updated
-      })
-      .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-  }, [localAddress]);
-  
-  console.log("localAddress:", localAddress); // Check the value of localAddress
-  
-  console.log("Final userNFTs:", userNFTs); // Check the final value of userNFTs
+
+    })
+    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+
+  });
   
 
   return (

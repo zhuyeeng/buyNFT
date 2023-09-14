@@ -8,8 +8,11 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css"; // optional
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
+import { useDispatch } from "react-redux";
+import { sellModalShow } from "../../redux/counterSlice";
 
 const User = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const pid = router.query.user;
 
@@ -67,6 +70,7 @@ const User = () => {
                       src ="/images/avatars/default.jpg"
                       alt="Deafult Profile Image"
                       className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-contain"
+                      onClick={() => dispatch(sellModalShow({pid}))}
                     />
                     <div
                       className="dark:border-jacarta-600 bg-green absolute -right-3 bottom-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
