@@ -15,17 +15,14 @@ const OnSaleNFT = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Fetch data only once when the component mounts
     fetchProfileNFTData()
       .then((data) => {
-        const filteredData = data
-          .filter((item) => item.ownerName.toLowerCase() === localAddress)
-          .filter((item) => item.price !== null);
-        setUserNFTs(filteredData);
-
-    })
-    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-
-  });
+        setUserNFTs(data); // Set the fetched data in the state
+        console.log("data: ", data);
+      })
+      .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  }, []); // Empty dependency array
 
   useEffect(() => {
     const storedAddress = localStorage.getItem('defaultAccount');
@@ -33,7 +30,7 @@ const OnSaleNFT = () => {
     if (storedAddress) {
       setLocalAddress(storedAddress);
     }
-  },[localAddress]);
+  },[]);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
@@ -48,6 +45,7 @@ const OnSaleNFT = () => {
           owner,
         } = item;
         // console.log(userNFTs);
+        if (owner.ownerName === localAddress && price !== null) {
         const itemLink = image
           .split("/")
           .slice(-1)
@@ -139,7 +137,7 @@ const OnSaleNFT = () => {
               </div>
             </div>
           </article>
-        );
+        )};
       })}
     </div>
   );
