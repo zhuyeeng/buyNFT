@@ -63,6 +63,7 @@ const BuyModal = () => {
         await tx.wait();
   
         console.log("NFT purchased successfully!");
+        dispatch(buyModalHide());
       } else {
         console.error("MetaMask extension not found or account not connected.");
       }

@@ -32,9 +32,9 @@ const User = () => {
     const storedAddress = localStorage.getItem('defaultAccount');
     const storedProfileImage = localStorage.getItem('selectedProfileImage');
 
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
+    // if (storedAddress) {
+    //   setLocalAddress(storedAddress);
+    // }
 
     if (storedProfileImage) {
       // Set the stored profile image as the initial state

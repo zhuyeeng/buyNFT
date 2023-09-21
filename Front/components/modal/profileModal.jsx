@@ -11,20 +11,9 @@ import { setProfileInfoCookie, getProfileInfoCookie } from './cookie.js';
 const ProfileModal = () => {
   const { profileModal } = useSelector((state) => state.counter);
   const [NFTImage, setNFTImage] = useState([]);
-  const [localAddress, setLocalAddress] = useState('');
+  const [localAddress, setLocalAddress] = useState();
   const [selectedProfileImage, setSelectedProfileImage] = useState("/images/avatars/default.jpg"); // Initialize with the default image
   const dispatch = useDispatch();
-
-  // const handleImageClick = (imageUrl) => {
-  //   setSelectedProfileImage(imageUrl);
-
-  //   // Save the selected image URL in local storage
-  //   // localStorage.setItem('selectedProfileImage', imageUrl);
-
-  //   // Save the selected image URL in both state and cookie
-  //   localStorage.setItem('selectedProfileImage', imageUrl);
-  //   setProfileImageCookie(imageUrl); // Save the selected image URL in a cookie
-  // };
 
   const handleImageClick = (imageUrl) => {
     setSelectedProfileImage(imageUrl);
@@ -33,27 +22,13 @@ const ProfileModal = () => {
     setProfileInfoCookie(localAddress, imageUrl); // Store both address and image URL
   };
 
-  // useEffect(() => {
-  //   // Detect if the user is connected to their wallet here
-  //   // For this example, let's assume the user is connected
-  //   const userIsConnected = true;
-
-  //   if (userIsConnected) {
-  //     // Retrieve the profile image from the cookie
-  //     const storedProfileImage = getProfileImageCookie();
-
-  //     // Update the profile image in the state
-  //     setSelectedProfileImage(storedProfileImage);
-  //   }
-  // }, []);
-
   useEffect(() => {
     // Detect if the user is connected to their wallet here
     // For this example, let's assume the user is connected
     const userIsConnected = true;
   
     if (userIsConnected) {
-      // Retrieve the profile information from the cookie
+      // Retrieve the profile information from the cookies
       const { address, imageUrl } = getProfileInfoCookie();
   
       // Update the profile image and address in the state
@@ -62,6 +37,7 @@ const ProfileModal = () => {
     }
   }, []);
 
+//remove
   useEffect(() => {
     const storedAddress = localStorage.getItem('defaultAccount');
   
@@ -79,7 +55,7 @@ const ProfileModal = () => {
       .catch((error) => console.error("Error Message: ", error.message));
   }, [localAddress]);
 
-  // console.log(NFTImage);
+  console.log(NFTImage);
 
   return (
     <div>
