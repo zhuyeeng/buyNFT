@@ -3,8 +3,6 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Activity_item from "../collectrions/Activity_item";
 import Image from "next/image";
 import OnSaleItem from "../categories/OnSaleItem";
-// import Explore_collection_item from "../collectrions/explore_collection_item";
-// import CategoryItem from "../categories/categoryItem";
 import TestItem from "../categories/testCategoriesItem";
 
 const User_items = () => {

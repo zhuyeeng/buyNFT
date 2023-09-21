@@ -11,6 +11,7 @@ const { fetchProfileNFTData } = require('../../data/nftDataFetcher');
 
 const testCategoriesItem = () => {
   const [userNFTs, setUserNFTs] = useState([]);
+  const [filteredNFTs, setFilteredNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
   const dispatch = useDispatch();
   
@@ -21,35 +22,31 @@ const testCategoriesItem = () => {
       setLocalAddress(storedAddress);
     }
   });
-  
-  // useEffect(() => {
-  //   fetchProfileNFTData()
-  //     .then((data) => {
-  //       console.log("Fetched data:", data);
-  //       const filteredData = data.filter((item) => item.ownerName.toLowerCase() === localAddress);
-  //       console.log("Filtered data:", filteredData);
-  //       setUserNFTs(filteredData);
-  //       console.log("User NFTs:", userNFTs); // Check if userNFTs is updated
-  //     })
-  //     .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-  // }, [localAddress]);
 
   useEffect(() => {
+    // Fetch data only once when the component mounts
     fetchProfileNFTData()
       .then((data) => {
-        const filteredData = data
-          .filter((item) => item.ownerName.toLowerCase() === localAddress)
-        setUserNFTs(filteredData);
+        setUserNFTs(data); // Set the fetched data in the state
+      })
+      .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  },[]);
 
-    })
-    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  useEffect(() => {
+    const filteredData = userNFTs.filter((nft) => {
+      // Check if ownerName matches localAddress and price is not null
+      return nft.ownerName.toLowerCase() === localAddress;
+    });
+    setFilteredNFTs(filteredData);
+  }, [userNFTs]); // Trigger the filter when userNFTs or localAddress change
 
-  });
-  
+  // console.log("Data: ", userNFTs);
+  // console.log("Address: ", localAddress);
+  console.log("Filtered NFTs(Owned): ", filteredNFTs);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-      {userNFTs.map((item) => {
+      {filteredNFTs.map((item) => {
         const {
           id,
           image,
@@ -59,7 +56,7 @@ const testCategoriesItem = () => {
           creator,
           owner,
         } = item;
-        console.log(userNFTs);
+        
         const itemLink = image
           .split("/")
           .slice(-1)

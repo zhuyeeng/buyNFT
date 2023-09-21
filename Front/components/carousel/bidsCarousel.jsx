@@ -8,7 +8,7 @@ import "tippy.js/dist/tippy.css";
 import Link from "next/link";
 import Tippy from "@tippyjs/react";
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
-import { bidsModalShow } from "../../redux/counterSlice";
+import { buyModalShow } from "../../redux/counterSlice";
 import { useDispatch } from "react-redux";
 import Likes from "../likes";
 const { fetchCarouselNFTData } = require('../../data/nftDataFetcher');
@@ -62,7 +62,7 @@ const BidsCarousel = () => {
         {modifiedNFTData.map((item) => {
           const { id, image, title, ListedTime, price, ownerName } =
             item;
-          const itemLink = id;
+          const pid = id;
 
           return (
             <SwiperSlide className="text-white" key={id}>
@@ -70,7 +70,7 @@ const BidsCarousel = () => {
                 <div className="dark:bg-jacarta-700 dark:border-jacarta-700 border-jacarta-100 rounded-2xl block border bg-white p-[1.1875rem] transition-shadow hover:shadow-lg text-jacarta-500">
                   <figure>
                     {/* {`item/${itemLink}`} */}
-                    <Link href={"/item/" + itemLink}>
+                    <Link href={"/item/" + pid}>
                       <Image
                         src={image}
                         alt={title}
@@ -82,7 +82,7 @@ const BidsCarousel = () => {
                     </Link>
                   </figure>
                   <div className="mt-4 flex items-center justify-between">
-                    <Link href={"/item/" + itemLink}>
+                    <Link href={"/item/" + pid}>
                       <span className="font-display text-jacarta-700 hover:text-accent text-base dark:text-white">
                         {title}
                       </span>
@@ -134,7 +134,7 @@ const BidsCarousel = () => {
                     <button
                       type="button"
                       className="text-accent font-display text-sm font-semibold"
-                      onClick={() => dispatch(bidsModalShow())}
+                      onClick={() => dispatch(buyModalShow({ pid, price }))}
                     >
                       Buy
                     </button>

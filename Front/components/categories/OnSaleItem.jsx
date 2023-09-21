@@ -12,20 +12,8 @@ const { fetchProfileNFTData } = require('../../data/nftDataFetcher');
 const OnSaleNFT = () => {
   const [userNFTs, setUserNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
+  const [filteredNFTs, setFilteredNFTs] = useState([]);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    fetchProfileNFTData()
-      .then((data) => {
-        const filteredData = data
-          .filter((item) => item.ownerName.toLowerCase() === localAddress)
-          .filter((item) => item.price !== null);
-        setUserNFTs(filteredData);
-
-    })
-    .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
-
-  });
 
   useEffect(() => {
     const storedAddress = localStorage.getItem('defaultAccount');
@@ -33,11 +21,32 @@ const OnSaleNFT = () => {
     if (storedAddress) {
       setLocalAddress(storedAddress);
     }
-  },[localAddress]);
+  },[]);
+
+  useEffect(() => {
+    // Fetch data only once when the component mounts
+    fetchProfileNFTData()
+      .then((data) => {
+        setUserNFTs(data); // Set the fetched data in the state
+      })
+      .catch((error) => console.error('Error fetching and processing NFT data:', error.message));
+  },[]);
+
+  useEffect(() => {
+    const filteredData = userNFTs.filter((nft) => {
+      // Check if ownerName matches localAddress and price is not null
+      return nft.ownerName.toLowerCase() === localAddress && nft.price !== null;
+    });
+    setFilteredNFTs(filteredData);
+  }, [userNFTs, localAddress]); // Trigger the filter when userNFTs or localAddress change
+  
+  // console.log("Data: ", userNFTs);
+  // console.log("Address: ", localAddress);
+  // console.log("Filtered NFTs: ", filteredNFTs);
 
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
-      {userNFTs.map((item) => {
+      {filteredNFTs.map((item) => {
         const {
           id,
           image,
@@ -47,7 +56,7 @@ const OnSaleNFT = () => {
           creator,
           owner,
         } = item;
-        // console.log(userNFTs);
+        
         const itemLink = image
           .split("/")
           .slice(-1)
