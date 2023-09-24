@@ -14,6 +14,7 @@ const BuyModal = () => {
   const dispatch = useDispatch();
   const [payAmount, setPayAmount] = useState(pid?.price||'');
   const [ethToUsdRate, setEthToUsdRate] = useState(0);
+  const [isTransactionPending, setIsTransactionPending] = useState(false);
   console.log("Buy Modal Running");
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const BuyModal = () => {
   
     try {
       if (window.ethereum && account) {
+        setIsTransactionPending(true);
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const nftContract = new ethers.Contract(nftContractAddress, nftBuySell, signer);
@@ -69,6 +71,8 @@ const BuyModal = () => {
       }
     } catch (error) {
       console.error("Error buying NFT:", error);
+    } finally{
+      setIsTransactionPending(false);
     }
   };
   
@@ -153,8 +157,9 @@ const BuyModal = () => {
                   type="button"
                   className="bg-accent shadow-accent-volume hover:bg-accent-dark rounded-full py-3 px-8 text-center font-semibold text-white transition-all"
                   onClick={buyNFT}
+                  disabled={isTransactionPending}
                 >
-                  Buy
+                  {isTransactionPending ? "Processing....": "Buy"}
                 </button>
               </div>
             </div>

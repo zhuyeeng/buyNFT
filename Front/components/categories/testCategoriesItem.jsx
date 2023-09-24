@@ -40,10 +40,6 @@ const testCategoriesItem = () => {
     setFilteredNFTs(filteredData);
   }, [userNFTs]); // Trigger the filter when userNFTs or localAddress change
 
-  // console.log("Data: ", userNFTs);
-  // console.log("Address: ", localAddress);
-  console.log("Filtered NFTs(Owned): ", filteredNFTs);
-
   return (
     <div className="grid grid-cols-1 gap-[1.875rem] md:grid-cols-2 lg:grid-cols-4">
       {filteredNFTs.map((item) => {
@@ -126,30 +122,8 @@ const testCategoriesItem = () => {
                     Not For Sale Yet
                   </span>
                 )}
-                {/* <span className="dark:text-jacarta-300 text-jacarta-500">
-                  {bidCount}/{bidLimit}
-                </span> */}
               </div>
 
-              <div className="mt-8 flex items-center justify-between">
-                {/* <button
-                  className="text-accent font-display text-sm font-semibold"
-                  onClick={() => dispatch(buyModalShow())}
-                >
-                  Buy now
-                </button>
-                <Link
-                  href={`/item/${itemLink}`}
-                  className="group flex items-center"
-                >
-                  <svg className="icon icon-history group-hover:fill-accent dark:fill-jacarta-200 fill-jacarta-500 mr-1 mb-[3px] h-4 w-4">
-                    <use xlinkHref="/icons.svg#icon-history"></use>
-                  </svg>
-                  <span className="group-hover:text-accent font-display dark:text-jacarta-200 text-sm font-semibold">
-                    View History
-                  </span>
-                </Link> */}
-              </div>
             </div>
           </article>
         );

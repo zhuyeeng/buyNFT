@@ -11,51 +11,34 @@ import { setProfileInfoCookie, getProfileInfoCookie } from './cookie.js';
 const ProfileModal = () => {
   const { profileModal } = useSelector((state) => state.counter);
   const [NFTImage, setNFTImage] = useState([]);
-  const [localAddress, setLocalAddress] = useState();
-  const [selectedProfileImage, setSelectedProfileImage] = useState("/images/avatars/default.jpg"); // Initialize with the default image
+  const [localAddress] = useState(localStorage.getItem('defaultAccount'));
+  // const [selectedProfileImage, setSelectedProfileImage] = useState("/images/avatars/default.jpg"); // Initialize with the default image
   const dispatch = useDispatch();
-
-  const handleImageClick = (imageUrl) => {
-    setSelectedProfileImage(imageUrl);
-  
-    // Assume 'localAddress' contains the user's Ethereum address
-    setProfileInfoCookie(localAddress, imageUrl); // Store both address and image URL
-  };
-
-  useEffect(() => {
-    // Detect if the user is connected to their wallet here
-    // For this example, let's assume the user is connected
-    const userIsConnected = true;
-  
-    if (userIsConnected) {
-      // Retrieve the profile information from the cookies
-      const { address, imageUrl } = getProfileInfoCookie();
-  
-      // Update the profile image and address in the state
-      setSelectedProfileImage(imageUrl);
-      setLocalAddress(address);
-    }
-  }, []);
-
-//remove
-  useEffect(() => {
-    const storedAddress = localStorage.getItem('defaultAccount');
-  
-    if (storedAddress) {
-      setLocalAddress(storedAddress);
-    }
-  },[]);
+  const [cookieInfo] = useState(getProfileInfoCookie);
+  const [cookieImage, setCookieImage] = useState();
+  console.log(cookieInfo.imageUrl);
 
   useEffect(() => {
     fetchProfileImage()
-      .then((data) => {
-        const ownedNFT = data.filter(item => item.ownerName.toLowerCase() === localAddress);
-        setNFTImage(ownedNFT);
-      })
-      .catch((error) => console.error("Error Message: ", error.message));
-  }, [localAddress]);
+    .then((data) => {
+      const filtered = data.filter(image => image.ownerName.toLowerCase() === localAddress);
+      setNFTImage(filtered);
+    })
+    .catch((error) => console.error('Error fetching: ',error.message));
 
-  console.log(NFTImage);
+    if(cookieInfo.address === localAddress){
+      setCookieImage(cookieInfo.imageUrl);
+      // console.log(cookieInfo.imagerUrl);
+    }else{
+      setCookieImage('/images/avatars/default.jpg' );
+      console.log("Failed");
+    }
+  },[]);
+
+  const changeProfileImage = async (imageURL) => {
+    setProfileInfoCookie(localAddress,imageURL);
+  }
+  // console.log(cookieImage);
 
   return (
     <div>
@@ -86,10 +69,22 @@ const ProfileModal = () => {
 
             {/* <!-- Body --> */}
             <div className="modal-body p-6">
-              <div className="flex">
+              <div className="flex justify-center">
+                <Image
+                  width={230}
+                  height={230}
+                  src={cookieImage}
+                  alt="Default Profile Image"
+                />
+              </div>
+            </div>
+            {/* <!-- end body --> */}
+
+            <div className="modal-footer">
+            <div className="flex">
                 <div className="mr-4"> {/* Add margin for spacing */}
                   <Image 
-                    onClick={() => handleImageClick("/images/avatars/default.jpg")}
+                    onClick={() => changeProfileImage("/images/avatars/default.jpg")}
                     width={230}
                     height={230}
                     src="/images/avatars/default.jpg"
@@ -99,7 +94,7 @@ const ProfileModal = () => {
                 {NFTImage.map((item, index) => (
                   <div key={index} className="mr-4"> {/* Add margin for spacing */}
                     <Image
-                      onClick={() => handleImageClick(item.image)}
+                      onClick={() => changeProfileImage(item.image)}
                       width={230}
                       height={230}
                       src={item.image}
@@ -107,15 +102,6 @@ const ProfileModal = () => {
                     />
                   </div>
                 ))}
-              </div>
-            </div>
-            {/* <!-- end body --> */}
-
-            <div className="modal-footer">
-              <div className="flex items-center justify-center space-x-4">
-                <button>
-                  Test
-                </button>
               </div>
             </div>
           </div>
