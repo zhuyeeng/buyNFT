@@ -6,17 +6,17 @@ import { ethers } from 'ethers';
 import { nftContractAddress } from '../../config/setting';
 import { fetchProfileImage } from "../../data/nftDataFetcher";
 import { setSelectedProfileImage } from "../../redux/counterSlice";
-import { setProfileInfoCookie, getProfileInfoCookie } from './cookie.js';
+// import { setProfileInfoCookie, getProfileInfoCookie } from './cookie.js';
+import { getOrSetProfileInfoCookie } from "./cookie"
 
 const ProfileModal = () => {
   const { profileModal } = useSelector((state) => state.counter);
   const [NFTImage, setNFTImage] = useState([]);
   const [localAddress] = useState(localStorage.getItem('defaultAccount'));
-  // const [selectedProfileImage, setSelectedProfileImage] = useState("/images/avatars/default.jpg"); // Initialize with the default image
   const dispatch = useDispatch();
-  const [cookieInfo] = useState(getProfileInfoCookie);
+  const [cookieInfo] = useState(getOrSetProfileInfoCookie);
   const [cookieImage, setCookieImage] = useState();
-  console.log(cookieInfo.imageUrl);
+
 
   useEffect(() => {
     fetchProfileImage()
@@ -36,7 +36,7 @@ const ProfileModal = () => {
   },[]);
 
   const changeProfileImage = async (imageURL) => {
-    setProfileInfoCookie(localAddress,imageURL);
+    getOrSetProfileInfoCookie(localAddress,imageURL);
   }
   // console.log(cookieImage);
 

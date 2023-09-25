@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { buyModalShow } from "../../redux/counterSlice";
 const { fetchProfileNFTData } = require('../../data/nftDataFetcher');
 
-const testCategoriesItem = () => {
+const ownedCategoriesItem = () => {
   const [userNFTs, setUserNFTs] = useState([]);
   const [filteredNFTs, setFilteredNFTs] = useState([]);
   const [localAddress, setLocalAddress] = useState('');
@@ -109,13 +109,15 @@ const testCategoriesItem = () => {
                   </span>
                 </Link>
 
-                {/* auction dropdown  */}
-                {/* <Auctions_dropdown classes="dark:hover:bg-jacarta-600 dropup hover:bg-jacarta-100 rounded-full " /> */}
               </div>
               <div className="mt-2 text-sm">
                 {price !== null ?(
                   <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                  {`${price.substring(0,5)}..${price.slice(-4)}`}
+                  {price.length > 7 ? (
+                    `${price.substring(0, 5)}..${price.slice(-2)} ETH`
+                  ) : (
+                    `${price} ETH`
+                  )}
                   </span>
                 ):(
                   <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
@@ -132,4 +134,4 @@ const testCategoriesItem = () => {
   );
 };
 
-export default testCategoriesItem;
+export default ownedCategoriesItem;

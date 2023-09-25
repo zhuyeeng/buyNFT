@@ -116,7 +116,11 @@ const OnSaleNFT = () => {
               <div className="mt-2 text-sm">
                 {price !== null ?(
                   <span className="dark:text-jacarta-200 text-jacarta-700 mr-1">
-                  {`${price.substring(0,5)}..${price.slice(-4)}`}
+                  {price.length > 7 ? (
+                    `${price.substring(0, 5)}..${price.slice(-2)} ETH`
+                  ) : (
+                    `${price} ETH`
+                  )}
                   </span>
                 ):null}
               </div>

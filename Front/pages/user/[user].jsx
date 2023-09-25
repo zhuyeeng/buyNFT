@@ -10,7 +10,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
 import { profileModalShow } from "../../redux/counterSlice";
-import { getProfileInfoCookie } from "../../components/modal/cookie";
+import { getOrSetProfileInfoCookie } from "../../components/modal/cookie";
 
 const User = () => {
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const User = () => {
   // Fetch and update the cookie data
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getProfileInfoCookie();
+      const data = await getOrSetProfileInfoCookie();
       setCookieData(data);
     };
     fetchData();
@@ -86,8 +86,7 @@ const User = () => {
                       height={141}
                       src ={profileImage}
                       alt="Deafult Profile Image"
-                      className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-contain"
-                      onClick={() => dispatch(profileModalShow())}
+                      className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-cover"                      onClick={() => dispatch(profileModalShow())}
                     />
                     <div
                       className="dark:border-jacarta-600 bg-green absolute -right-3 bottom-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
