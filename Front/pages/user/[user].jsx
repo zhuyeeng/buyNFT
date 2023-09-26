@@ -26,6 +26,7 @@ const User = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getOrSetProfileInfoCookie();
+      console.log("Data From Cookie: ", data);
       setCookieData(data);
     };
     fetchData();

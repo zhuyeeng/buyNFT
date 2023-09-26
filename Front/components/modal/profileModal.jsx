@@ -26,13 +26,13 @@ const ProfileModal = () => {
     })
     .catch((error) => console.error('Error fetching: ',error.message));
 
-    if(cookieInfo.address === localAddress){
-      setCookieImage(cookieInfo.imageUrl);
-      // console.log(cookieInfo.imagerUrl);
-    }else{
-      setCookieImage('/images/avatars/default.jpg' );
-      console.log("Failed");
-    }
+    // if(cookieInfo.address === localAddress){
+    //   setCookieImage(cookieInfo.imageUrl);
+    //   // console.log(cookieInfo.imagerUrl);
+    // }else{
+    //   setCookieImage('/images/avatars/default.jpg' );
+    //   console.log("Failed");
+    // }
   },[]);
 
   const changeProfileImage = async (imageURL) => {
@@ -81,29 +81,27 @@ const ProfileModal = () => {
             {/* <!-- end body --> */}
 
             <div className="modal-footer">
-            <div className="flex">
-                <div className="mr-4"> {/* Add margin for spacing */}
-                  <Image 
-                    onClick={() => changeProfileImage("/images/avatars/default.jpg")}
-                    width={230}
-                    height={230}
-                    src="/images/avatars/default.jpg"
-                    alt="Default Profile Image"
-                  />
-                </div>
-                {NFTImage.map((item, index) => (
-                  <div key={index} className="mr-4"> {/* Add margin for spacing */}
-                    <Image
-                      onClick={() => changeProfileImage(item.image)}
-                      width={230}
-                      height={230}
-                      src={item.image}
-                      alt="NFT Image"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+  <div className="flex">
+    {NFTImage.length > 0 ? (
+      <>
+        {NFTImage.map((item, index) => (
+          <div key={index} className="mr-4"> {/* Add margin for spacing */}
+            <Image
+              onClick={() => changeProfileImage(item.image)}
+              width={230}
+              height={230}
+              src={item.image}
+              alt="NFT Image"
+            />
+          </div>
+        ))}
+      </>
+    ) : (
+      <span>Loading...</span>
+    )}
+  </div>
+</div>
+
           </div>
         </div>
       </div>

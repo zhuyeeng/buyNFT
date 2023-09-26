@@ -38,15 +38,57 @@ import { fetchProfileImage } from '../../data/nftDataFetcher';
 //   }
 // };
 
+// // Function to get or set the profile information in a cookie
+// export const getOrSetProfileInfoCookie = async (address, imageUrl) => {
+//   let slotNumber = 0;
+//   let profileInfoCookie;
+
+//   // Try to find a slot with matching address
+//   while (true) {
+//     profileInfoCookie = Cookies.get(`profileInfo${slotNumber}`);
+//     if (!profileInfoCookie) break; // Exit loop if slot doesn't exist
+//     const decodedData = decodeURIComponent(profileInfoCookie);
+//     const [storedAddress, storedImageUrl] = decodedData.split(';');
+    
+//     if (storedAddress === address) {
+//       // Check NFT ownership using the fetched NFT data
+//       const isOwned = await checkOwner(address, imageUrl);
+
+//       if (isOwned) {
+//         return { address: storedAddress, imageUrl: storedImageUrl }; // Return the values obtained from the cookie
+//       } else {
+//         // NFT is not owned, update the image URL to the default image
+//         const defaultImageUrl = '/images/avatars/default.jpg';
+//         Cookies.set(`profileInfo${slotNumber}`, `${address};${defaultImageUrl}`, { expires: 365 });
+//         return { address: storedAddress, imageUrl: defaultImageUrl };
+//       }
+//     } else {
+//       slotNumber++;
+//     }
+//   }
+
+//   // If no matching slots found, create a new one
+//   const defaultImageUrl = '/images/avatars/default.jpg';
+//   Cookies.set(`profileInfo${slotNumber}`, `${address};${imageUrl || defaultImageUrl}`, { expires: 365 });
+//   return { address, imageUrl: imageUrl || defaultImageUrl };
+// };
+
 // Function to get or set the profile information in a cookie
 export const getOrSetProfileInfoCookie = async (address, imageUrl) => {
+  // Try to find a slot with matching address
   let slotNumber = 0;
   let profileInfoCookie;
 
-  // Try to find a slot with matching address
   while (true) {
     profileInfoCookie = Cookies.get(`profileInfo${slotNumber}`);
-    if (!profileInfoCookie) break; // Exit loop if slot doesn't exist
+    
+    if (!profileInfoCookie) {
+      // If no matching slots found, create a new one
+      const defaultImageUrl = '/images/avatars/default.jpg';
+      Cookies.set(`profileInfo${slotNumber}`, `${address};${imageUrl || defaultImageUrl}`, { expires: 365 });
+      return { address: address, imageUrl: imageUrl || defaultImageUrl };
+    }
+    
     const decodedData = decodeURIComponent(profileInfoCookie);
     const [storedAddress, storedImageUrl] = decodedData.split(';');
     
@@ -66,11 +108,6 @@ export const getOrSetProfileInfoCookie = async (address, imageUrl) => {
       slotNumber++;
     }
   }
-
-  // If no matching slots found, create a new one
-  const defaultImageUrl = '/images/avatars/default.jpg';
-  Cookies.set(`profileInfo${slotNumber}`, `${address};${imageUrl || defaultImageUrl}`, { expires: 365 });
-  return { address, imageUrl: imageUrl || defaultImageUrl };
 };
 
 // Function to check NFT ownership
