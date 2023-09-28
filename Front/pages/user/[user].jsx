@@ -10,41 +10,22 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import Meta from "../../components/Meta";
 import { useDispatch } from "react-redux";
 import { profileModalShow } from "../../redux/counterSlice";
-import { getOrSetProfileInfoCookie } from "../../components/modal/cookie";
+import { getAllProfileInfoCookies } from "../../components/modal/cookie";
 
 const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const pid = router.query.user;
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState("/images/avatars/avatar_1.jpg");
   const [localAddress, setLocalAddress] = useState("");
   const [likesImage, setLikesImage] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [cookieData, setCookieData] = useState({ address: "", imageUrl: "" });
-
-  // Fetch and update the cookie data
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getOrSetProfileInfoCookie();
-      console.log("Data From Cookie: ", data);
-      setCookieData(data);
-    };
-    fetchData();
-  }, []);
+  const [loading, setLoading]= useState(true);
 
   // Handle the "Like" button click
   const handleLikes = () => {
     setLikesImage(!likesImage);
   };
-
-  // Check if the address matches and set the profile image accordingly
-  useEffect(() => {
-    if (cookieData.address === localAddress) {
-      setProfileImage(cookieData.imageUrl);
-    } else {
-      setProfileImage("/images/avatars/default.jpg");
-    }
-  }, [cookieData, localAddress]);
 
   // Fetch the stored address and set it in local state
   useEffect(() => {
@@ -58,6 +39,26 @@ const User = () => {
       setCopied(false);
     }, 2000);
   }, [copied]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllProfileInfoCookies();
+
+        data.forEach(item => {
+          if(item.address === localAddress){
+            console.log("Matched");
+            setProfileImage(item.imageUrl);
+          }
+        })
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  })
 
   return (
     <>
@@ -87,7 +88,8 @@ const User = () => {
                       height={141}
                       src ={profileImage}
                       alt="Deafult Profile Image"
-                      className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-cover"                      onClick={() => dispatch(profileModalShow())}
+                      className="dark:border-jacarta-600 rounded-xl border-[5px] border-white w-full h-full object-cover"                      
+                      onClick={() => dispatch(profileModalShow())}
                     />
                     <div
                       className="dark:border-jacarta-600 bg-green absolute -right-3 bottom-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white"
