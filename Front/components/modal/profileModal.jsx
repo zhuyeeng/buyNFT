@@ -82,10 +82,10 @@ const ProfileModal = () => {
             {/* <!-- end body --> */}
 
             <div className="modal-footer">
-              <div className="flex">
+              <div className="flex flex-wrap">
                 {NFTImage.length > 0 ? (
                   <>
-                  <div className="h-40 w-40">
+                  <div className="h-44 w-44 mr-1">
                     <Image
                       onClick={() => changeProfileImage('/images/avatars/default.jpg')}
                       width={141}
@@ -96,7 +96,7 @@ const ProfileModal = () => {
                     />
                   </div>
                   {NFTImage.map((item, index) => (
-                    <div key={index} className="h-40 w-40">
+                    <div key={index} className="h-44 w-44 mr-1">
                       <Image
                         onClick={() => changeProfileImage(item.image)}
                         width={141}
